@@ -29,7 +29,7 @@ function Hero() {
       <img
         className="absolute inset-0 h-full w-full object-cover object-center"
         src={heroImage}
-        alt="Beauty model for LUMÉA"
+        alt="Beauty model for IVORIA"
       />
 
       <Container>

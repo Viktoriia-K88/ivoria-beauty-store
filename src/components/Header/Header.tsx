@@ -424,7 +424,7 @@ function Header() {
               className="font-display text-[28px] font-medium tracking-[0.08em] min-[900px]:text-[29px] 2xl:text-3xl"
               to="/"
             >
-              LUMÉA
+              IVORIA
             </Link>
 
             <nav
@@ -641,7 +641,7 @@ function Header() {
               to="/"
               onClick={closeMenu}
             >
-              LUMÉA
+              IVORIA
             </Link>
 
             <button
