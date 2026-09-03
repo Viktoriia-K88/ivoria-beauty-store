@@ -94,6 +94,7 @@ function ProductDetails({ product }: { product: Product }) {
 
   const categoryPath = category ? `/shop?category=${category}` : "/shop";
 
+  const hasProductMetadata = Boolean(product.size || product.shade);
 
   function decreaseQuantity() {
     setQuantity((currentQuantity) => Math.max(1, currentQuantity - 1));
@@ -236,6 +237,30 @@ function ProductDetails({ product }: { product: Product }) {
               />
 
               {availability}
+            </div>
+          )}
+
+          {hasProductMetadata && (
+            <div className="mt-7 flex flex-wrap gap-x-12 gap-y-5">
+              {product.size && (
+                <div>
+                  <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.15em] text-text-secondary">
+                    Size
+                  </p>
+
+                  <p className="text-[13px]">{product.size}</p>
+                </div>
+              )}
+
+              {product.shade && (
+                <div>
+                  <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.15em] text-text-secondary">
+                    Shade
+                  </p>
+
+                  <p className="text-[13px]">{product.shade}</p>
+                </div>
+              )}
             </div>
           )}
 
