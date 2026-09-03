@@ -12,4 +12,6 @@ export type Product = {
   category: string | null;
   gender: string | null;
   catalogCategory: string | null;
+  size: string | null;
+  shade: string | null;
 };

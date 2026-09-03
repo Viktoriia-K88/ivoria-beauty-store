@@ -3,7 +3,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { isChannel3FetchEnabled } from "./channel3Service.js";
-import { getUniqueProducts } from "../utils/productUtils.js";
+
+import {
+  enrichProductMetadata,
+  getUniqueProducts,
+} from "../utils/productUtils.js";
 
 const CACHE_TTL = 24 * 60 * 60 * 1000;
 
@@ -50,7 +54,14 @@ export async function loadPersistentCache() {
         continue;
       }
 
-      catalogCache.set(key, value);
+      const products = value.products.map((product) =>
+        enrichProductMetadata(product),
+      );
+
+      catalogCache.set(key, {
+        ...value,
+        products,
+      });
     }
 
     console.log(`Loaded ${catalogCache.size} cached catalogs`);
