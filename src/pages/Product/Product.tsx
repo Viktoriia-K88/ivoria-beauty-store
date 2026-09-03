@@ -1,9 +1,19 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronRight,
+  Heart,
+  Minus,
+  Plus,
+  ShoppingBag,
+} from "lucide-react";
 import { Link, useLocation, useParams, useSearchParams } from "react-router";
 
 import Container from "../../components/Container/Container";
+import { addToCart } from "../../features/cart/cartSlice";
+import { toggleFavorite } from "../../features/favorites/favoritesSlice";
 import { getProductById } from "../../services/productsApi";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import type { Product } from "../../types/product";
 
 type ProductLocationState = {
@@ -44,6 +54,10 @@ function getAvailabilityLabel(availability: string | null) {
 }
 
 function ProductDetails({ product }: { product: Product }) {
+  const dispatch = useAppDispatch();
+
+  const [quantity, setQuantity] = useState(1);
+
   const galleryImages = [...new Set([product.image, ...product.images])].filter(
     Boolean,
   );
@@ -54,10 +68,22 @@ function ProductDetails({ product }: { product: Product }) {
     galleryImages[0] || product.image,
   );
 
+  const isFavorite = useAppSelector((state) =>
+    state.favorites.items.some((favorite) => favorite.id === product.id),
+  );
+
+  const cartQuantity = useAppSelector(
+    (state) =>
+      state.cart.items.find((item) => item.product.id === product.id)
+        ?.quantity ?? 0,
+  );
+
   const hasDiscount =
     product.compareAtPrice !== null && product.compareAtPrice > product.price;
 
   const availability = getAvailabilityLabel(product.availability);
+
+  const isOutOfStock = availability === "Out of stock";
 
   const category =
     product.catalogCategory && product.catalogCategory !== "all"
@@ -67,6 +93,34 @@ function ProductDetails({ product }: { product: Product }) {
   const categoryLabel = category ? categoryLabels[category] : null;
 
   const categoryPath = category ? `/shop?category=${category}` : "/shop";
+
+
+  function decreaseQuantity() {
+    setQuantity((currentQuantity) => Math.max(1, currentQuantity - 1));
+  }
+
+  function increaseQuantity() {
+    setQuantity((currentQuantity) => currentQuantity + 1);
+  }
+
+  function handleAddToCart() {
+    if (isOutOfStock) {
+      return;
+    }
+
+    dispatch(
+      addToCart({
+        product,
+        quantity,
+      }),
+    );
+
+    setQuantity(1);
+  }
+
+  function handleFavoriteClick() {
+    dispatch(toggleFavorite(product));
+  }
 
   return (
     <>
@@ -225,11 +279,80 @@ function ProductDetails({ product }: { product: Product }) {
             )}
           </div>
 
-          <div className="mt-10">
-            <p className="text-[12px] leading-6 text-text-secondary">
-              Cart and wishlist controls will be connected to the global store
-              in the next implementation step.
+          <div className="mt-10 border-t border-border pt-8">
+            <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.15em] text-text-secondary">
+              Quantity
             </p>
+
+            <div className="flex gap-3">
+              <div className="flex h-12 shrink-0 items-center border border-border bg-background">
+                <button
+                  className="flex h-full w-11 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 disabled:cursor-not-allowed disabled:opacity-25"
+                  type="button"
+                  aria-label="Decrease quantity"
+                  disabled={quantity === 1 || isOutOfStock}
+                  onClick={decreaseQuantity}
+                >
+                  <Minus size={15} strokeWidth={1.2} />
+                </button>
+
+                <span
+                  className="flex w-8 items-center justify-center text-[13px]"
+                  aria-live="polite"
+                >
+                  {quantity}
+                </span>
+
+                <button
+                  className="flex h-full w-11 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 disabled:cursor-not-allowed disabled:opacity-25"
+                  type="button"
+                  aria-label="Increase quantity"
+                  disabled={isOutOfStock}
+                  onClick={increaseQuantity}
+                >
+                  <Plus size={15} strokeWidth={1.2} />
+                </button>
+              </div>
+
+              <button
+                className="flex h-12 flex-1 cursor-pointer items-center justify-center gap-2.5 bg-text-primary px-5 text-[11px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+                type="button"
+                disabled={isOutOfStock}
+                onClick={handleAddToCart}
+              >
+                <ShoppingBag size={17} strokeWidth={1.15} />
+
+                {isOutOfStock ? "Out of stock" : "Add to bag"}
+              </button>
+
+              <button
+                className="flex size-12 shrink-0 cursor-pointer items-center justify-center border border-border text-text-primary transition-colors hover:border-text-primary"
+                type="button"
+                aria-label={
+                  isFavorite
+                    ? `Remove ${product.title} from favorites`
+                    : `Add ${product.title} to favorites`
+                }
+                aria-pressed={isFavorite}
+                onClick={handleFavoriteClick}
+              >
+                <Heart
+                  size={19}
+                  strokeWidth={1.15}
+                  fill={isFavorite ? "currentColor" : "none"}
+                />
+              </button>
+            </div>
+
+            {cartQuantity > 0 && (
+              <p
+                className="mt-3 text-[11px] text-text-secondary"
+                aria-live="polite"
+              >
+                {cartQuantity} {cartQuantity === 1 ? "item" : "items"} in your
+                bag
+              </p>
+            )}
           </div>
         </div>
       </div>
