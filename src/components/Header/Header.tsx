@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { Link, NavLink, useNavigate } from "react-router";
 
+import { useAppSelector } from "../../store/hooks";
+
 import Container from "../Container/Container";
 
 type MenuLink = {
@@ -332,10 +334,16 @@ const menuPositionClasses = {
 function Header() {
   const navigate = useNavigate();
 
+  const favoritesCount = useAppSelector(
+    (state) => state.favorites.items.length,
+  );
+
+  const cartCount = useAppSelector((state) =>
+    state.cart.items.reduce((total, item) => total + item.quantity, 0),
+  );
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-
   const [searchQuery, setSearchQuery] = useState("");
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -538,29 +546,37 @@ function Header() {
               </Link>
 
               <Link
-                className="hidden transition-opacity hover:opacity-60 min-[900px]:flex"
+                className="relative hidden transition-opacity hover:opacity-60 min-[900px]:flex"
                 to="/favorites"
-                aria-label="Favorites"
+                aria-label={`Favorites (${favoritesCount})`}
               >
                 <Heart
                   className="size-5 xl:size-[22px] 2xl:size-[25px]"
                   strokeWidth={1.15}
                 />
+
+                {favoritesCount > 0 && (
+                  <span className="absolute -right-2 -top-2 flex min-w-4 items-center justify-center rounded-full bg-text-primary px-1 text-[9px] font-medium leading-4 text-white">
+                    {favoritesCount}
+                  </span>
+                )}
               </Link>
 
               <Link
                 className="relative flex transition-opacity hover:opacity-60"
                 to="/cart"
-                aria-label="Cart"
+                aria-label={`Cart (${cartCount})`}
               >
                 <ShoppingBag
                   className="size-[22px] min-[900px]:size-5 xl:size-[22px] 2xl:size-[25px]"
                   strokeWidth={1.15}
                 />
 
-                <span className="absolute -right-2 -top-2 flex size-4 items-center justify-center rounded-full bg-text-primary text-[10px] font-medium text-white">
-                  0
-                </span>
+                {cartCount > 0 && (
+                  <span className="absolute -right-2 -top-2 flex min-w-4 items-center justify-center rounded-full bg-text-primary px-1 text-[9px] font-medium leading-4 text-white">
+                    {cartCount}
+                  </span>
+                )}
               </Link>
             </div>
           </div>
@@ -691,12 +707,20 @@ function Header() {
               </Link>
 
               <Link
-                className="flex items-center gap-3 text-[12px] uppercase tracking-[0.08em] transition-opacity hover:opacity-60"
+                className="flex items-center justify-between text-[12px] uppercase tracking-[0.08em] transition-opacity hover:opacity-60"
                 to="/favorites"
                 onClick={closeMenu}
               >
-                <Heart size={18} strokeWidth={1.15} />
-                Favorites
+                <span className="flex items-center gap-3">
+                  <Heart size={18} strokeWidth={1.15} />
+                  Favorites
+                </span>
+
+                {favoritesCount > 0 && (
+                  <span className="flex min-w-5 items-center justify-center rounded-full bg-text-primary px-1.5 text-[9px] font-medium leading-5 text-white">
+                    {favoritesCount}
+                  </span>
+                )}
               </Link>
             </div>
           </div>

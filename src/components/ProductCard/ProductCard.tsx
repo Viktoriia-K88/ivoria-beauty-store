@@ -1,5 +1,8 @@
+import { Heart } from "lucide-react";
 import { Link } from "react-router";
 
+import { toggleFavorite } from "../../features/favorites/favoritesSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import type { Product } from "../../types/product";
 
 type ProductCardProps = {
@@ -14,6 +17,12 @@ function formatPrice(price: number, currency: string) {
 }
 
 function ProductCard({ product }: ProductCardProps) {
+  const dispatch = useAppDispatch();
+
+  const isFavorite = useAppSelector((state) =>
+    state.favorites.items.some((favorite) => favorite.id === product.id),
+  );
+
   const hasDiscount =
     product.compareAtPrice !== null && product.compareAtPrice > product.price;
 
@@ -21,21 +30,50 @@ function ProductCard({ product }: ProductCardProps) {
     `/products/${product.id}` +
     `?category=${encodeURIComponent(product.catalogCategory || "all")}`;
 
+  function handleFavoriteClick() {
+    dispatch(toggleFavorite(product));
+  }
+
   return (
-    <Link className="group block" to={productPath} state={{ product }}>
+    <article className="group">
       <div className="relative aspect-square overflow-hidden bg-surface">
-        <img
-          className="h-full w-full object-contain p-8 transition-transform duration-500 ease-out group-hover:scale-[1.025] md:p-9 xl:p-10"
-          src={product.image}
-          alt={product.title}
-          loading="lazy"
-        />
+        <Link
+          className="block h-full w-full"
+          to={productPath}
+          state={{ product }}
+          aria-label={`View ${product.title}`}
+        >
+          <img
+            className="h-full w-full object-contain p-8 transition-transform duration-500 ease-out group-hover:scale-[1.025] md:p-9 xl:p-10"
+            src={product.image}
+            alt={product.title}
+            loading="lazy"
+          />
+        </Link>
 
         {hasDiscount && (
           <span className="absolute left-3 top-3 bg-text-primary px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.08em] text-white">
             Sale
           </span>
         )}
+
+        <button
+          className="absolute right-3 top-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-background/90 text-text-primary transition-[transform,background-color] duration-300 hover:scale-105 hover:bg-background"
+          type="button"
+          aria-label={
+            isFavorite
+              ? `Remove ${product.title} from favorites`
+              : `Add ${product.title} to favorites`
+          }
+          aria-pressed={isFavorite}
+          onClick={handleFavoriteClick}
+        >
+          <Heart
+            size={18}
+            strokeWidth={1.2}
+            fill={isFavorite ? "currentColor" : "none"}
+          />
+        </button>
       </div>
 
       <div className="pt-4">
@@ -43,9 +81,11 @@ function ProductCard({ product }: ProductCardProps) {
           {product.brand}
         </p>
 
-        <h3 className="line-clamp-2 min-h-10 text-[14px] leading-5">
-          {product.title}
-        </h3>
+        <Link className="block" to={productPath} state={{ product }}>
+          <h3 className="line-clamp-2 min-h-10 text-[14px] leading-5">
+            {product.title}
+          </h3>
+        </Link>
 
         <div className="mt-2.5 flex items-center gap-2.5">
           <span className="text-[14px] font-medium">
@@ -59,7 +99,7 @@ function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
       </div>
-    </Link>
+    </article>
   );
 }
 
