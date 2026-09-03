@@ -35,23 +35,23 @@ function Hero() {
       <Container>
         <div className="relative z-10 flex min-h-[620px] items-center md:min-h-[680px] xl:min-h-[720px]">
           <div
-            className="ml-4 max-w-[620px] transition-[opacity,transform] duration-100 ease-linear sm:ml-8 lg:ml-12 xl:ml-14"
+            className="ml-4 max-w-[660px] transition-[opacity,transform] duration-100 ease-linear sm:ml-8 lg:ml-12 xl:ml-14"
             style={{
               opacity: 1 - scrollProgress,
               transform: `translateY(${scrollProgress * 80}px)`,
             }}
           >
-            <p className="mb-5 animate-[hero-fade-up_700ms_ease-out_both] text-[13px] font-medium uppercase tracking-[0.22em] text-text-primary/70">
+            <p className="mb-5 animate-[hero-fade-up_700ms_ease-out_both] text-[14px] font-medium uppercase tracking-[0.22em] text-text-primary/70">
               Curated for you
             </p>
 
-            <h1 className="font-display animate-[hero-fade-up_800ms_100ms_ease-out_both] text-[56px] leading-[0.9] font-medium tracking-[-0.025em] sm:text-[68px] md:text-[78px] xl:text-[92px] 2xl:text-[100px]">
-              Beauty, made intentional.
+            <h1 className="font-display animate-[hero-fade-up_800ms_100ms_ease-out_both] text-[60px] leading-[0.9] font-medium tracking-[-0.025em] sm:text-[72px] md:text-[82px] xl:text-[98px] 2xl:text-[118px]">
+              Beauty, made intentional
             </h1>
 
             <p className="mt-7 max-w-[500px] animate-[hero-fade-up_800ms_200ms_ease-out_both] text-[15px] leading-7 text-text-primary/75 md:text-[16px]">
               A considered selection of skincare, makeup, fragrance, hair and
-              body essentials for your everyday ritual.
+              body essentials for your everyday ritual
             </p>
 
             <Link
@@ -61,7 +61,7 @@ function Hero() {
               Explore the collection
               <ArrowRight
                 className="transition-transform duration-300 group-hover:translate-x-1"
-                size={17}
+                size={20}
                 strokeWidth={1.2}
               />
             </Link>
