@@ -46,7 +46,7 @@ function Hero() {
             </p>
 
             <h1 className="font-display animate-[hero-fade-up_800ms_100ms_ease-out_both] text-[60px] leading-[0.9] font-medium tracking-[-0.025em] sm:text-[72px] md:text-[82px] xl:text-[98px] 2xl:text-[118px]">
-              Beauty, made intentional
+              Your world of beauty
             </h1>
 
             <p className="mt-7 max-w-[500px] animate-[hero-fade-up_800ms_200ms_ease-out_both] text-[15px] leading-7 text-text-primary/75 md:text-[16px]">

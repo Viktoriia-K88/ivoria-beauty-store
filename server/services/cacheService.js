@@ -2,6 +2,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { excludedProductIds } from "../config/catalogConfig.js";
+
 import { isChannel3FetchEnabled } from "./channel3Service.js";
 
 import {
@@ -25,6 +27,10 @@ const catalogPromises = new Map();
 
 let cacheWritePromise = Promise.resolve();
 
+function isExcludedProduct(product) {
+  return excludedProductIds.includes(String(product.id));
+}
+
 export async function loadPersistentCache() {
   try {
     const fileContent = await fs.readFile(CACHE_FILE, "utf8");
@@ -38,6 +44,8 @@ export async function loadPersistentCache() {
     const savedCache = JSON.parse(fileContent);
 
     const now = Date.now();
+
+    let cacheWasCleaned = false;
 
     for (const [key, value] of Object.entries(savedCache)) {
       if (
@@ -54,7 +62,15 @@ export async function loadPersistentCache() {
         continue;
       }
 
-      const products = value.products.map((product) =>
+      const filteredProducts = value.products.filter(
+        (product) => !isExcludedProduct(product),
+      );
+
+      if (filteredProducts.length !== value.products.length) {
+        cacheWasCleaned = true;
+      }
+
+      const products = filteredProducts.map((product) =>
         enrichProductMetadata(product),
       );
 
@@ -65,6 +81,12 @@ export async function loadPersistentCache() {
     }
 
     console.log(`Loaded ${catalogCache.size} cached catalogs`);
+
+    if (cacheWasCleaned) {
+      await savePersistentCache();
+
+      console.log("Removed excluded products from persistent cache");
+    }
   } catch (error) {
     if (error?.code === "ENOENT") {
       console.log("No persistent catalog cache found");
