@@ -25,6 +25,30 @@ import {
 
 const MIN_FILTER_RESULTS = 4;
 
+const SALE_PRODUCTS_LIMIT = 4;
+
+const FRESH_PICKS_LIMIT = 4;
+
+function filterSuitableProducts(products, config) {
+  return getUniqueProducts(
+    products.filter((product) => isSuitableProduct(product, config)),
+  );
+}
+
+function filterAllSuitableProducts(products) {
+  const suitableProducts = products.filter((product) => {
+    const config = categoryConfigs[product.catalogCategory];
+
+    if (!config) {
+      return false;
+    }
+
+    return isSuitableProduct(product, config);
+  });
+
+  return getUniqueProducts(suitableProducts);
+}
+
 async function buildCategoryCatalog(category) {
   const config = categoryConfigs[category];
 
@@ -45,10 +69,18 @@ async function buildCategoryCatalog(category) {
   return interleaveProducts(productLists);
 }
 
-export function getCategoryCatalog(category) {
-  return getCachedCatalog(`category:${category}`, () =>
+export async function getCategoryCatalog(category) {
+  const config = categoryConfigs[category];
+
+  if (!config) {
+    return [];
+  }
+
+  const products = await getCachedCatalog(`category:${category}`, () =>
     buildCategoryCatalog(category),
   );
+
+  return filterSuitableProducts(products, config);
 }
 
 export async function getTypeCatalog(category, type) {
@@ -67,10 +99,10 @@ export async function getTypeCatalog(category, type) {
   );
 
   if (localProducts.length >= MIN_FILTER_RESULTS) {
-    return localProducts;
+    return getUniqueProducts(localProducts);
   }
 
-  const targetedProducts = await getCachedCatalog(
+  const cachedTargetedProducts = await getCachedCatalog(
     `type:${category}:${type}`,
 
     async () => {
@@ -82,6 +114,10 @@ export async function getTypeCatalog(category, type) {
         .filter((product) => matchesProductType(product, typeConfig));
     },
   );
+
+  const targetedProducts = cachedTargetedProducts
+    .filter((product) => isSuitableProduct(product, config))
+    .filter((product) => matchesProductType(product, typeConfig));
 
   const combinedProducts = getUniqueProducts([
     ...localProducts,
@@ -109,10 +145,10 @@ export async function getBrandCatalog(category, brand) {
   );
 
   if (localProducts.length >= MIN_FILTER_RESULTS) {
-    return localProducts;
+    return getUniqueProducts(localProducts);
   }
 
-  const targetedProducts = await getCachedCatalog(
+  const cachedTargetedProducts = await getCachedCatalog(
     `brand:${category}:${brand}`,
 
     async () => {
@@ -126,6 +162,10 @@ export async function getBrandCatalog(category, brand) {
         .filter((product) => matchesBrand(product, brandConfig.aliases));
     },
   );
+
+  const targetedProducts = cachedTargetedProducts
+    .filter((product) => isSuitableProduct(product, config))
+    .filter((product) => matchesBrand(product, brandConfig.aliases));
 
   const combinedProducts = getUniqueProducts([
     ...localProducts,
@@ -155,8 +195,10 @@ export async function getRequestCatalog(category, type, brand) {
       return brandProducts;
     }
 
-    return brandProducts.filter((product) =>
-      matchesProductType(product, typeConfig),
+    return getUniqueProducts(
+      brandProducts.filter((product) =>
+        matchesProductType(product, typeConfig),
+      ),
     );
   }
 
@@ -175,8 +217,10 @@ async function buildAllProducts() {
   return interleaveProducts(categoryCatalogs);
 }
 
-export function getAllProducts() {
-  return getCachedCatalog("all-products", buildAllProducts);
+export async function getAllProducts() {
+  const products = await getCachedCatalog("all-products", buildAllProducts);
+
+  return filterAllSuitableProducts(products);
 }
 
 export async function getFeaturedProducts() {
@@ -225,11 +269,45 @@ export async function getFeaturedProducts() {
   return featured;
 }
 
+export async function getSaleProducts() {
+  const allProducts = await getAllProducts();
+
+  return allProducts
+    .filter(
+      (product) =>
+        product.compareAtPrice !== null &&
+        product.compareAtPrice > product.price,
+    )
+    .slice(0, SALE_PRODUCTS_LIMIT);
+}
+
+export async function getFreshPicks() {
+  const allProducts = await getAllProducts();
+
+  const featuredProducts = await getFeaturedProducts();
+
+  const saleProducts = await getSaleProducts();
+
+  const excludedProducts = new Set(
+    [...featuredProducts, ...saleProducts].map((product) =>
+      getProductKey(product),
+    ),
+  );
+
+  return allProducts
+    .filter((product) => !excludedProducts.has(getProductKey(product)))
+    .slice(0, FRESH_PICKS_LIMIT);
+}
+
 export async function getProductById(productId, category) {
   const cachedProduct = findProductInCache(productId);
 
   if (cachedProduct) {
-    return cachedProduct;
+    const config = categoryConfigs[cachedProduct.catalogCategory];
+
+    if (config && isSuitableProduct(cachedProduct, config)) {
+      return cachedProduct;
+    }
   }
 
   if (category && category !== "all" && categoryConfigs[category]) {

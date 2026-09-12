@@ -193,10 +193,6 @@ const navigation: NavigationItem[] = [
           path: "/shop?category=perfume&brand=chanel",
         },
         {
-          label: "Giorgio Armani",
-          path: "/shop?category=perfume&brand=giorgio-armani",
-        },
-        {
           label: "Yves Saint Laurent",
           path: "/shop?category=perfume&brand=yves-saint-laurent",
         },
@@ -207,10 +203,6 @@ const navigation: NavigationItem[] = [
         {
           label: "Victoria's Secret",
           path: "/shop?category=perfume&brand=victorias-secret",
-        },
-        {
-          label: "Tiziana Terenzi",
-          path: "/shop?category=perfume&brand=tiziana-terenzi",
         },
       ],
     },

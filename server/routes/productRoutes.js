@@ -4,8 +4,10 @@ import { categoryConfigs } from "../config/catalogConfig.js";
 
 import {
   getFeaturedProducts,
+  getFreshPicks,
   getProductById,
   getRequestCatalog,
+  getSaleProducts,
 } from "../services/catalogService.js";
 
 import {
@@ -117,6 +119,46 @@ router.get(
 
       res.status(500).json({
         message: "Failed to fetch featured products",
+      });
+    }
+  },
+);
+
+router.get(
+  "/sale-products",
+
+  async (req, res) => {
+    try {
+      const products = await getSaleProducts();
+
+      res.json({
+        products,
+      });
+    } catch (error) {
+      console.error("Failed to fetch sale products:", error);
+
+      res.status(500).json({
+        message: "Failed to fetch sale products",
+      });
+    }
+  },
+);
+
+router.get(
+  "/fresh-picks",
+
+  async (req, res) => {
+    try {
+      const products = await getFreshPicks();
+
+      res.json({
+        products,
+      });
+    } catch (error) {
+      console.error("Failed to fetch fresh picks:", error);
+
+      res.status(500).json({
+        message: "Failed to fetch fresh picks",
       });
     }
   },

@@ -19,7 +19,7 @@ export type ProductsParams = {
   maxPrice?: number | null;
 };
 
-type FeaturedProductsResponse = {
+type ProductsResponse = {
   products: Product[];
 };
 
@@ -35,11 +35,8 @@ export async function getProductsPage(
 ): Promise<ProductsPage> {
   const searchParams = new URLSearchParams({
     category: params.category || "all",
-
     page: String(params.page || 1),
-
     limit: String(params.limit || 8),
-
     sort: params.sort || "featured",
   });
 
@@ -119,7 +116,37 @@ export async function getFeaturedProducts(
     throw new Error("Failed to fetch featured products");
   }
 
-  const data: FeaturedProductsResponse = await response.json();
+  const data: ProductsResponse = await response.json();
+
+  return data.products;
+}
+
+export async function getSaleProducts(
+  signal?: AbortSignal,
+): Promise<Product[]> {
+  const response = await fetch(`${API_URL}/api/sale-products`, {
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch sale products");
+  }
+
+  const data: ProductsResponse = await response.json();
+
+  return data.products;
+}
+
+export async function getFreshPicks(signal?: AbortSignal): Promise<Product[]> {
+  const response = await fetch(`${API_URL}/api/fresh-picks`, {
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch fresh picks");
+  }
+
+  const data: ProductsResponse = await response.json();
 
   return data.products;
 }
