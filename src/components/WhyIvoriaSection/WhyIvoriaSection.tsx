@@ -33,14 +33,14 @@ const benefits = [
 
 function WhyIvoriaSection() {
   return (
-    <section className="bg-[#f3ebe2] py-20 md:py-24 xl:py-28">
+    <section className="bg-[#f3ebe2] py-12 sm:py-14 md:py-20 xl:py-28">
       <Container>
-        <div className="mb-14 md:mb-16">
-          <p className="mb-4 text-[13px] font-medium uppercase tracking-[0.18em] text-text-secondary">
+        <div className="mb-8 sm:mb-10 md:mb-14 xl:mb-16">
+          <p className="mb-3 text-[12px] font-medium uppercase tracking-[0.18em] text-text-secondary sm:text-[13px] md:mb-4">
             Why IVORIA
           </p>
 
-          <h2 className="max-w-[700px] font-display text-[44px] leading-none font-medium md:text-[56px] xl:text-[64px]">
+          <h2 className="max-w-[700px] font-display text-[36px] leading-[0.95] font-medium sm:text-[40px] md:text-[50px] lg:text-[56px] xl:text-[64px]">
             Designed around the way you shop beauty
           </h2>
         </div>
@@ -48,24 +48,24 @@ function WhyIvoriaSection() {
         <div className="grid border-t border-border md:grid-cols-2 lg:grid-cols-4">
           {benefits.map((benefit) => (
             <article
-              className="border-b border-border py-7 md:px-6 md:first:pl-0 lg:border-b-0 lg:border-r lg:py-8 lg:last:border-r-0 lg:last:pr-0"
+              className="border-b border-border py-5 sm:py-6 md:px-6 md:py-7 md:first:pl-0 lg:border-b-0 lg:border-r lg:py-8 lg:last:border-r-0 lg:last:pr-0"
               key={benefit.number}
             >
-              <div className="mb-10 flex items-center justify-between">
-                <span className="font-display text-[30px] leading-none text-text-secondary">
+              <div className="mb-6 flex items-center justify-between sm:mb-7 md:mb-9 lg:mb-10">
+                <span className="font-display text-[27px] leading-none text-text-secondary sm:text-[28px] lg:text-[30px]">
                   {benefit.number}
                 </span>
 
-                <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-secondary">
+                <span className="text-[9px] font-medium uppercase tracking-[0.14em] text-text-secondary sm:text-[10px]">
                   {benefit.label}
                 </span>
               </div>
 
-              <h3 className="max-w-[260px] text-[17px] leading-6 font-medium md:text-[18px]">
+              <h3 className="max-w-[260px] text-[16px] leading-6 font-medium sm:text-[17px] md:text-[18px]">
                 {benefit.title}
               </h3>
 
-              <p className="mt-4 max-w-[280px] text-[14px] leading-6 text-text-secondary">
+              <p className="mt-2 max-w-[280px] text-[13px] leading-5 text-text-secondary sm:mt-3 sm:leading-6 md:text-[14px]">
                 {benefit.description}
               </p>
             </article>

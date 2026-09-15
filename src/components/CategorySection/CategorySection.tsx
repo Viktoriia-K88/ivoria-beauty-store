@@ -69,47 +69,47 @@ function CategorySection() {
   }
 
   return (
-    <section className="py-16 md:py-20 xl:py-24">
+    <section className="py-14 sm:py-16 md:py-20 xl:py-24">
       <Container>
-        <div className="mb-10 flex items-end justify-between gap-6 md:mb-12">
+        <div className="mb-8 flex items-end justify-between gap-4 sm:mb-10 md:mb-12">
           <div>
-            <p className="mb-3 text-[13px] font-medium uppercase tracking-[0.18em] text-text-secondary">
+            <p className="mb-3 text-[12px] font-medium uppercase tracking-[0.18em] text-text-secondary sm:text-[13px]">
               Explore
             </p>
 
-            <h2 className="font-display text-[44px] leading-none font-medium md:text-[54px] xl:text-[60px]">
+            <h2 className="font-display text-[38px] leading-none font-medium sm:text-[44px] md:text-[54px] xl:text-[60px]">
               Shop by category
             </h2>
           </div>
 
-          <div className="flex shrink-0 items-center gap-3 xl:hidden">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3 xl:hidden">
             <button
-              className="flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-surface"
+              className="flex size-9 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-surface sm:size-10"
               type="button"
               aria-label="Previous categories"
               onClick={() => scrollCategories("left")}
             >
-              <ArrowLeft size={19} strokeWidth={1.2} />
+              <ArrowLeft size={18} strokeWidth={1.2} />
             </button>
 
             <button
-              className="flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-surface"
+              className="flex size-9 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-surface sm:size-10"
               type="button"
               aria-label="Next categories"
               onClick={() => scrollCategories("right")}
             >
-              <ArrowRight size={19} strokeWidth={1.2} />
+              <ArrowRight size={18} strokeWidth={1.2} />
             </button>
           </div>
         </div>
 
         <div
           ref={categoriesRef}
-          className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-1 scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0 xl:grid xl:grid-cols-5 xl:overflow-visible"
+          className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden xl:grid xl:grid-cols-5 xl:overflow-visible"
         >
           {categories.map((category) => (
             <Link
-              className="group min-w-[78%] snap-start sm:min-w-[46%] md:min-w-[32%] xl:min-w-0"
+              className="group min-w-[58%] snap-start sm:min-w-[37%] md:min-w-[27%] xl:min-w-0"
               key={category.name}
               to={category.path}
             >
@@ -122,7 +122,7 @@ function CategorySection() {
               </div>
 
               <div className="mt-4 flex items-center justify-between gap-4">
-                <h3 className="text-[13px] font-normal uppercase tracking-[0.12em]">
+                <h3 className="text-[12px] font-normal uppercase tracking-[0.12em] sm:text-[13px]">
                   {category.name}
                 </h3>
 

@@ -636,7 +636,7 @@ function Header() {
         inert={!isMenuOpen}
       >
         <div
-          className={`h-full w-[85%] bg-background transition-transform min-[480px]:w-1/2 min-[640px]:w-1/3 ${
+          className={`h-full w-full bg-background transition-transform min-[360px]:w-[85%] min-[480px]:w-[60%] min-[700px]:w-[45%] ${
             isMenuOpen
               ? "translate-x-0 duration-[400ms] ease-out"
               : "-translate-x-full duration-[250ms] ease-in"

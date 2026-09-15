@@ -8,7 +8,7 @@ import WhyIvoriaSection from "../../components/WhyIvoriaSection/WhyIvoriaSection
 
 function Home() {
   return (
-    <>
+    <main>
       <Hero />
       <CategorySection />
       <NewArrivals />
@@ -16,7 +16,7 @@ function Home() {
       <JustInSection />
       <WhyIvoriaSection />
       <AboutSection />
-    </>
+    </main>
   );
 }
 

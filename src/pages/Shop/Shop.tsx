@@ -93,9 +93,7 @@ const filterLabels: Record<string, string> = {
   lips: "Lips",
 
   "eau-de-parfum": "Eau de Parfum",
-
   "eau-de-toilette": "Eau de Toilette",
-
   "body-mist": "Body Mists",
 
   shampoo: "Shampoo",
@@ -112,29 +110,21 @@ const filterLabels: Record<string, string> = {
   deodorant: "Deodorant",
 
   "la-roche-posay": "La Roche-Posay",
-
   cerave: "CeraVe",
   bioderma: "Bioderma",
   clinique: "Clinique",
   lancome: "Lancôme",
 
   dior: "Dior",
-
   "yves-saint-laurent": "Yves Saint Laurent",
-
   "charlotte-tilbury": "Charlotte Tilbury",
-
   maybelline: "Maybelline",
   nyx: "NYX",
 
   chanel: "Chanel",
-
   "giorgio-armani": "Giorgio Armani",
-
   guerlain: "Guerlain",
-
   "victorias-secret": "Victoria's Secret",
-
   "tiziana-terenzi": "Tiziana Terenzi",
 
   kerastase: "Kérastase",
@@ -143,7 +133,6 @@ const filterLabels: Record<string, string> = {
   moroccanoil: "Moroccanoil",
 
   "sol-de-janeiro": "Sol de Janeiro",
-
   loccitane: "L'Occitane",
   necessaire: "Nécessaire",
 };
@@ -194,29 +183,23 @@ function ShopCatalog({
   const sortRef = useRef<HTMLDivElement>(null);
 
   const [products, setProducts] = useState<Product[]>([]);
-
   const [total, setTotal] = useState(0);
-
   const [currentPage, setCurrentPage] = useState(1);
 
   const [isLoading, setIsLoading] = useState(true);
-
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const [error, setError] = useState("");
 
   const [search, setSearch] = useState(initialSearch);
-
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
 
   const [sort, setSort] = useState("featured");
 
   const [isSortOpen, setIsSortOpen] = useState(false);
-
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   const [minPrice, setMinPrice] = useState("");
-
   const [maxPrice, setMaxPrice] = useState("");
 
   const canLoadMore = products.length < total;
@@ -254,29 +237,19 @@ function ShopCatalog({
         const data = await getProductsPage(
           {
             category: activeCategory.value,
-
             type: activeType,
-
             brand: activeBrand,
-
             page: 1,
-
             limit: PRODUCTS_PER_PAGE,
-
             search: debouncedSearch,
-
             sort,
-
             minPrice: minPrice === "" ? null : Number(minPrice),
-
             maxPrice: maxPrice === "" ? null : Number(maxPrice),
           },
-
           controller.signal,
         );
 
         setProducts(data.products);
-
         setTotal(data.total);
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
@@ -324,12 +297,10 @@ function ShopCatalog({
     }
 
     document.addEventListener("mousedown", handlePointerDown);
-
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.removeEventListener("mousedown", handlePointerDown);
-
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isSortOpen]);
@@ -341,35 +312,25 @@ function ShopCatalog({
 
     try {
       setIsLoadingMore(true);
-
       setError("");
 
       const nextPage = currentPage + 1;
 
       const data = await getProductsPage({
         category: activeCategory.value,
-
         type: activeType,
-
         brand: activeBrand,
-
         page: nextPage,
-
         limit: PRODUCTS_PER_PAGE,
-
         search: debouncedSearch,
-
         sort,
-
         minPrice: minPrice === "" ? null : Number(minPrice),
-
         maxPrice: maxPrice === "" ? null : Number(maxPrice),
       });
 
       setProducts((currentProducts) => [...currentProducts, ...data.products]);
 
       setCurrentPage(nextPage);
-
       setTotal(data.total);
     } catch {
       setError("Unable to load more products.");
@@ -391,7 +352,6 @@ function ShopCatalog({
       navigate(
         buildShopPath(activeCategory.value, {
           type: activeType,
-
           brand: activeBrand,
         }),
         {
@@ -415,32 +375,32 @@ function ShopCatalog({
   }
 
   return (
-    <section className="pt-10 pb-14 md:pt-12 md:pb-16 xl:pt-14 xl:pb-20">
+    <section className="pt-8 pb-14 sm:pt-10 sm:pb-16 md:pt-14 md:pb-20 xl:pt-20 xl:pb-24">
       <Container>
-        <div className="border-b border-border pb-10 md:pb-12">
-          <p className="mb-3 text-[12px] font-medium uppercase tracking-[0.18em] text-text-secondary">
+        <div className="border-b border-border pb-8 sm:pb-10 md:pb-12">
+          <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:text-[12px] sm:tracking-[0.18em]">
             Shop
           </p>
 
-          <h1 className="font-display text-[52px] leading-none font-medium md:text-[64px] xl:text-[72px]">
+          <h1 className="font-display text-[36px] leading-[0.95] font-medium sm:text-[40px] md:text-[50px] lg:text-[56px] xl:text-[60px]">
             {activeCategory.label === "All"
               ? "All beauty"
               : activeCategory.label}
           </h1>
 
-          <p className="mt-5 max-w-[560px] text-[14px] leading-6 text-text-secondary md:text-[15px]">
+          <p className="mt-4 max-w-[560px] text-[13px] leading-6 text-text-secondary sm:mt-5 sm:text-[14px] md:text-[15px]">
             Discover a curated selection of beauty essentials across skincare,
             makeup, fragrance, hair and body care.
           </p>
         </div>
 
-        <div className="flex items-center gap-6 overflow-x-auto border-b border-border py-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-8 min-[900px]:hidden">
+        <div className="flex items-center gap-5 overflow-x-auto border-b border-border py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-6 sm:py-5 md:gap-8 min-[900px]:hidden">
           {categories.map((category) => {
             const isActive = activeCategory.value === category.value;
 
             return (
               <Link
-                className={`relative shrink-0 pb-1 text-[11px] font-medium uppercase tracking-[0.12em] transition-opacity hover:opacity-60 ${
+                className={`relative shrink-0 pb-1 text-[10px] font-medium uppercase tracking-[0.12em] transition-opacity hover:opacity-60 sm:text-[11px] ${
                   isActive
                     ? "after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-text-primary"
                     : ""
@@ -454,8 +414,8 @@ function ShopCatalog({
           })}
         </div>
 
-        <div className="border-b border-border py-5">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="border-b border-border py-4 sm:py-5">
+          <div className="flex flex-col gap-4 sm:gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="relative w-full lg:max-w-[450px]">
               <Search
                 className="absolute left-0 top-1/2 -translate-y-1/2"
@@ -487,9 +447,9 @@ function ShopCatalog({
               )}
             </div>
 
-            <div className="flex items-center justify-between gap-6 lg:justify-end">
+            <div className="flex items-center justify-between gap-4 sm:gap-6 lg:justify-end">
               <button
-                className="flex cursor-pointer items-center gap-2 text-[11px] font-medium uppercase tracking-[0.12em] transition-opacity hover:opacity-60"
+                className="flex shrink-0 cursor-pointer items-center gap-2 text-[10px] font-medium uppercase tracking-[0.12em] transition-opacity hover:opacity-60 sm:text-[11px]"
                 type="button"
                 aria-expanded={isFiltersOpen}
                 onClick={() => setIsFiltersOpen((current) => !current)}
@@ -505,7 +465,7 @@ function ShopCatalog({
 
               <div className="relative" ref={sortRef}>
                 <button
-                  className="flex cursor-pointer items-center gap-2 py-2 text-[11px] font-medium uppercase tracking-[0.1em] transition-opacity hover:opacity-60"
+                  className="flex cursor-pointer items-center gap-1.5 py-2 text-[10px] font-medium uppercase tracking-[0.1em] transition-opacity hover:opacity-60 sm:gap-2 sm:text-[11px]"
                   type="button"
                   aria-haspopup="listbox"
                   aria-expanded={isSortOpen}
@@ -523,7 +483,7 @@ function ShopCatalog({
                 </button>
 
                 <div
-                  className={`absolute right-0 top-[calc(100%+6px)] z-30 w-[220px] origin-top-right border border-border bg-background p-1.5 shadow-[0_12px_30px_rgba(31,30,28,0.08)] transition-[opacity,transform] duration-200 ${
+                  className={`absolute right-0 top-[calc(100%+6px)] z-30 w-[210px] origin-top-right border border-border bg-background p-1.5 shadow-[0_12px_30px_rgba(31,30,28,0.08)] transition-[opacity,transform] duration-200 sm:w-[220px] ${
                     isSortOpen
                       ? "pointer-events-auto translate-y-0 opacity-100"
                       : "pointer-events-none -translate-y-1 opacity-0"
@@ -536,7 +496,7 @@ function ShopCatalog({
 
                     return (
                       <button
-                        className="flex w-full cursor-pointer items-center justify-between gap-4 px-3 py-2.5 text-left text-[11px] uppercase tracking-[0.08em] transition-colors hover:bg-sage"
+                        className="flex w-full cursor-pointer items-center justify-between gap-4 px-3 py-2.5 text-left text-[10px] uppercase tracking-[0.08em] transition-colors hover:bg-sage sm:text-[11px]"
                         type="button"
                         role="option"
                         aria-selected={isActive}
@@ -561,7 +521,7 @@ function ShopCatalog({
           </div>
 
           {isFiltersOpen && (
-            <div className="mt-6 flex flex-col gap-5 border-t border-border pt-5 sm:flex-row sm:items-end">
+            <div className="mt-5 flex flex-col gap-4 border-t border-border pt-5 min-[420px]:flex-row min-[420px]:items-end min-[420px]:gap-5 sm:mt-6">
               <label className="flex flex-col gap-2" htmlFor="min-price">
                 <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary">
                   Min price
@@ -570,7 +530,7 @@ function ShopCatalog({
                 <input
                   id="min-price"
                   name="minPrice"
-                  className="w-full border border-border bg-transparent px-3 py-2.5 text-[13px] outline-none transition-colors focus:border-text-primary sm:w-[150px]"
+                  className="w-full border border-border bg-transparent px-3 py-2.5 text-[13px] outline-none transition-colors focus:border-text-primary min-[420px]:w-[150px]"
                   type="number"
                   min="0"
                   placeholder="$0"
@@ -587,7 +547,7 @@ function ShopCatalog({
                 <input
                   id="max-price"
                   name="maxPrice"
-                  className="w-full border border-border bg-transparent px-3 py-2.5 text-[13px] outline-none transition-colors focus:border-text-primary sm:w-[150px]"
+                  className="w-full border border-border bg-transparent px-3 py-2.5 text-[13px] outline-none transition-colors focus:border-text-primary min-[420px]:w-[150px]"
                   type="number"
                   min="0"
                   placeholder="$300"
@@ -598,7 +558,7 @@ function ShopCatalog({
 
               {activeFilterCount > 0 && (
                 <button
-                  className="cursor-pointer pb-2.5 text-left text-[10px] font-medium uppercase tracking-[0.12em] underline underline-offset-4 transition-opacity hover:opacity-60"
+                  className="cursor-pointer text-left text-[10px] font-medium uppercase tracking-[0.12em] underline underline-offset-4 transition-opacity hover:opacity-60 min-[420px]:pb-2.5"
                   type="button"
                   onClick={clearFilters}
                 >
@@ -609,9 +569,9 @@ function ShopCatalog({
           )}
         </div>
 
-        <div className="flex min-h-14 flex-wrap items-center gap-3">
+        <div className="flex min-h-12 flex-wrap items-center gap-3 sm:min-h-14">
           {!isLoading && (
-            <p className="text-[12px] text-text-secondary">
+            <p className="text-[11px] text-text-secondary sm:text-[12px]">
               Showing {products.length} of {total} products
             </p>
           )}
@@ -630,14 +590,12 @@ function ShopCatalog({
         </div>
 
         {isLoading && (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4 xl:gap-x-6 xl:gap-y-12">
-            {Array.from({
-              length: 8,
-            }).map((_, index) => (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:grid-cols-4 xl:gap-x-6 xl:gap-y-12">
+            {Array.from({ length: 8 }).map((_, index) => (
               <div key={index}>
                 <div className="aspect-square animate-pulse bg-sage" />
 
-                <div className="mt-4 h-3 w-1/3 animate-pulse bg-border" />
+                <div className="mt-3 h-3 w-1/3 animate-pulse bg-border sm:mt-4" />
 
                 <div className="mt-3 h-4 w-4/5 animate-pulse bg-border" />
 
@@ -648,16 +606,20 @@ function ShopCatalog({
         )}
 
         {!isLoading && error && products.length === 0 && (
-          <div className="py-20 text-center">
-            <p className="text-[14px] text-text-secondary">{error}</p>
+          <div className="py-16 text-center md:py-20">
+            <p className="text-[13px] text-text-secondary sm:text-[14px]">
+              {error}
+            </p>
           </div>
         )}
 
         {!isLoading && !error && products.length === 0 && (
-          <div className="py-20 text-center">
-            <h2 className="font-display text-[36px]">No products found</h2>
+          <div className="py-16 text-center md:py-20">
+            <h2 className="font-display text-[32px] leading-none font-medium sm:text-[36px] md:text-[42px]">
+              No products found
+            </h2>
 
-            <p className="mt-3 text-[14px] text-text-secondary">
+            <p className="mt-3 text-[13px] text-text-secondary sm:text-[14px]">
               Try another category or filter.
             </p>
           </div>
@@ -665,16 +627,16 @@ function ShopCatalog({
 
         {!isLoading && products.length > 0 && (
           <>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4 xl:gap-x-6 xl:gap-y-12">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:grid-cols-4 xl:gap-x-6 xl:gap-y-12">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
 
             {canLoadMore && (
-              <div className="mt-14 flex justify-center md:mt-16">
+              <div className="mt-10 flex justify-center sm:mt-12 md:mt-14 xl:mt-16">
                 <button
-                  className="min-w-[170px] cursor-pointer border border-text-primary px-7 py-3.5 text-[11px] font-medium uppercase tracking-[0.12em] transition-colors duration-300 hover:bg-text-primary hover:text-white disabled:cursor-default disabled:opacity-50"
+                  className="min-w-[160px] cursor-pointer border border-text-primary px-6 py-3 text-[10px] font-medium uppercase tracking-[0.12em] transition-colors duration-300 hover:bg-text-primary hover:text-white disabled:cursor-default disabled:opacity-50 sm:min-w-[170px] sm:px-7 sm:py-3.5 sm:text-[11px]"
                   type="button"
                   disabled={isLoadingMore}
                   onClick={handleLoadMore}
@@ -700,11 +662,8 @@ function Shop() {
   const [searchParams] = useSearchParams();
 
   const categoryParam = searchParams.get("category") || "all";
-
   const initialSearch = searchParams.get("search") || "";
-
   const activeType = searchParams.get("type") || "";
-
   const activeBrand = searchParams.get("brand") || "";
 
   const activeCategory =
