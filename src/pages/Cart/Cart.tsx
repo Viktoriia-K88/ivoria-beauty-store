@@ -38,28 +38,28 @@ function Cart() {
     return (
       <main>
         <Container>
-          <section className="flex min-h-[calc(100vh-72px)] flex-col items-center justify-center py-20 text-center min-[900px]:min-h-[calc(100vh-80px)]">
+          <section className="flex min-h-[calc(100vh-72px)] flex-col items-center justify-center py-14 text-center sm:py-16 md:py-20 min-[900px]:min-h-[calc(100vh-80px)]">
             <ShoppingBag
-              className="mb-6 text-text-secondary"
-              size={36}
+              className="mb-5 text-text-secondary sm:mb-6"
+              size={34}
               strokeWidth={1}
             />
 
-            <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary">
+            <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:text-[12px]">
               Shopping bag
             </p>
 
-            <h1 className="font-display text-4xl font-medium md:text-5xl">
+            <h1 className="max-w-[620px] font-display text-[36px] leading-[0.95] font-medium sm:text-[40px] md:text-[50px] lg:text-[56px] xl:text-[60px]">
               Your bag is empty
             </h1>
 
-            <p className="mt-5 max-w-md text-[14px] leading-6 text-text-secondary">
+            <p className="mt-5 max-w-md text-[13px] leading-6 text-text-secondary sm:text-[14px]">
               Discover our curated beauty collection and add your favorite
               products to your bag.
             </p>
 
             <Link
-              className="mt-8 inline-flex min-h-12 items-center justify-center bg-text-primary px-8 text-[11px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80"
+              className="mt-7 inline-flex min-h-11 items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 sm:mt-8 sm:min-h-12 sm:px-8 sm:text-[11px]"
               to="/shop"
             >
               Continue shopping
@@ -73,18 +73,18 @@ function Cart() {
   return (
     <main>
       <Container>
-        <section className="py-12 md:py-16 xl:py-20">
-          <div className="mb-10 flex items-end justify-between gap-6 border-b border-border pb-6">
+        <section className="py-10 sm:py-12 md:py-16 xl:py-20">
+          <div className="mb-8 flex flex-col items-start gap-5 border-b border-border pb-6 sm:mb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-6 md:mb-12">
             <div>
-              <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary">
+              <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:text-[12px]">
                 Your selection
               </p>
 
-              <h1 className="font-display text-4xl font-medium md:text-5xl">
+              <h1 className="font-display text-[36px] leading-[0.95] font-medium sm:text-[40px] md:text-[50px] lg:text-[56px] xl:text-[60px]">
                 Shopping bag
               </h1>
 
-              <p className="mt-3 text-[13px] text-text-secondary">
+              <p className="mt-3 text-[12px] text-text-secondary sm:text-[13px]">
                 {totalQuantity} {totalQuantity === 1 ? "item" : "items"}
               </p>
             </div>
@@ -98,7 +98,7 @@ function Cart() {
             </button>
           </div>
 
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-14 xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-20">
+          <div className="grid gap-10 md:gap-12 min-[1100px]:grid-cols-[minmax(0,1fr)_340px] min-[1100px]:items-start min-[1100px]:gap-14 xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-20">
             <div>
               {cartItems.map(({ product, quantity }) => {
                 const productPath =
@@ -111,7 +111,7 @@ function Cart() {
 
                 return (
                   <article
-                    className="grid grid-cols-[110px_minmax(0,1fr)] gap-5 border-b border-border py-6 first:pt-0 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-7"
+                    className="grid grid-cols-[90px_minmax(0,1fr)] gap-4 border-b border-border py-5 first:pt-0 min-[420px]:grid-cols-[110px_minmax(0,1fr)] min-[420px]:gap-5 sm:grid-cols-[130px_minmax(0,1fr)] sm:gap-6 sm:py-6 md:grid-cols-[150px_minmax(0,1fr)] md:gap-7"
                     key={product.id}
                   >
                     <Link
@@ -121,16 +121,16 @@ function Cart() {
                       aria-label={`View ${product.title}`}
                     >
                       <img
-                        className="h-full w-full object-contain p-4 sm:p-5"
+                        className="h-full w-full object-contain p-3 sm:p-4 md:p-5"
                         src={product.image}
                         alt={product.title}
                       />
                     </Link>
 
                     <div className="flex min-w-0 flex-col">
-                      <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start justify-between gap-3 sm:gap-4">
                         <div className="min-w-0">
-                          <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.14em] text-text-secondary">
+                          <p className="mb-1.5 text-[9px] font-medium uppercase tracking-[0.14em] text-text-secondary sm:mb-2 sm:text-[10px]">
                             {product.brand}
                           </p>
 
@@ -139,7 +139,7 @@ function Cart() {
                             to={productPath}
                             state={{ product }}
                           >
-                            <h2 className="font-display text-[20px] leading-6 sm:text-[23px] sm:leading-7">
+                            <h2 className="font-display text-[17px] leading-5 min-[420px]:text-[18px] sm:text-[20px] sm:leading-6 md:text-[23px] md:leading-7">
                               {product.title}
                             </h2>
                           </Link>
@@ -151,18 +151,21 @@ function Cart() {
                           aria-label={`Remove ${product.title} from cart`}
                           onClick={() => dispatch(removeFromCart(product.id))}
                         >
-                          <Trash2 size={20} strokeWidth={1.1} />
+                          <Trash2
+                            className="size-[17px] sm:size-5"
+                            strokeWidth={1.1}
+                          />
                         </button>
                       </div>
 
-                      <p className="mt-3 text-[13px] text-text-secondary">
+                      <p className="mt-2 text-[12px] text-text-secondary sm:mt-3 sm:text-[13px]">
                         {formatPrice(product.price, product.currency)}
                       </p>
 
-                      <div className="mt-auto flex flex-wrap items-end justify-between gap-4 pt-5">
-                        <div className="flex h-10 items-center border border-border">
+                      <div className="mt-auto flex flex-wrap items-end justify-between gap-3 pt-4 sm:gap-4 sm:pt-5">
+                        <div className="flex h-9 items-center border border-border sm:h-10">
                           <button
-                            className="flex h-full w-9 cursor-pointer items-center justify-center transition-opacity hover:opacity-50"
+                            className="flex h-full w-8 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 sm:w-9"
                             type="button"
                             aria-label={`Decrease quantity of ${product.title}`}
                             onClick={() =>
@@ -173,14 +176,14 @@ function Cart() {
                           </button>
 
                           <span
-                            className="flex w-8 items-center justify-center text-[12px]"
+                            className="flex w-7 items-center justify-center text-[11px] sm:w-8 sm:text-[12px]"
                             aria-live="polite"
                           >
                             {quantity}
                           </span>
 
                           <button
-                            className="flex h-full w-9 cursor-pointer items-center justify-center transition-opacity hover:opacity-50"
+                            className="flex h-full w-8 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 sm:w-9"
                             type="button"
                             aria-label={`Increase quantity of ${product.title}`}
                             onClick={() =>
@@ -191,7 +194,7 @@ function Cart() {
                           </button>
                         </div>
 
-                        <p className="text-[14px] font-medium">
+                        <p className="text-[13px] font-medium sm:text-[14px]">
                           {formatPrice(itemTotal, product.currency)}
                         </p>
                       </div>
@@ -201,8 +204,8 @@ function Cart() {
               })}
             </div>
 
-            <aside className="border border-border bg-surface p-6 md:p-8 lg:sticky lg:top-28">
-              <p className="mb-6 text-[10px] font-medium uppercase tracking-[0.16em] text-text-secondary">
+            <aside className="mx-auto w-full max-w-[620px] border border-border bg-surface p-5 sm:p-6 md:p-8 min-[1100px]:sticky min-[1100px]:top-28 min-[1100px]:mx-0 min-[1100px]:max-w-none">
+              <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:mb-6">
                 Order summary
               </p>
 
@@ -214,16 +217,18 @@ function Cart() {
                 </span>
               </div>
 
-              <div className="flex items-center justify-between gap-5 border-b border-border py-5 text-[12px] text-text-secondary">
+              <div className="flex items-center justify-between gap-5 border-b border-border py-5 text-[11px] text-text-secondary sm:text-[12px]">
                 <span>Shipping</span>
 
-                <span>Calculated at checkout</span>
+                <span className="text-right">Calculated at checkout</span>
               </div>
 
               <div className="flex items-center justify-between gap-5 pt-5">
-                <span className="font-display text-[22px]">Total</span>
+                <span className="font-display text-[20px] sm:text-[22px]">
+                  Total
+                </span>
 
-                <span className="text-[16px] font-medium">
+                <span className="text-[15px] font-medium sm:text-[16px]">
                   {formatPrice(subtotal, currency)}
                 </span>
               </div>
@@ -233,7 +238,7 @@ function Cart() {
               </p>
 
               <Link
-                className="mt-7 flex min-h-12 w-full items-center justify-center bg-text-primary px-6 text-[11px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80"
+                className="mx-auto mt-6 flex min-h-11 w-full items-center justify-center bg-text-primary px-5 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 min-[480px]:max-w-[360px] sm:mt-7 sm:min-h-12 sm:px-6 sm:text-[11px] min-[1100px]:max-w-none"
                 to="/checkout"
               >
                 Proceed to checkout

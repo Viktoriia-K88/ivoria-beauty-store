@@ -125,7 +125,7 @@ function ProductDetails({ product }: { product: Product }) {
 
   return (
     <>
-      <div className="mb-8 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.1em] text-text-secondary md:mb-10">
+      <div className="mb-6 flex flex-wrap items-center gap-1.5 text-[10px] uppercase tracking-[0.1em] text-text-secondary sm:mb-8 sm:gap-2 sm:text-[11px] md:mb-10">
         <Link className="transition-opacity hover:opacity-60" to="/shop">
           Shop
         </Link>
@@ -145,27 +145,27 @@ function ProductDetails({ product }: { product: Product }) {
 
         <ChevronRight size={12} strokeWidth={1.2} />
 
-        <span className="max-w-[260px] truncate text-text-primary">
+        <span className="max-w-[150px] truncate text-text-primary sm:max-w-[260px]">
           {product.title}
         </span>
       </div>
 
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.75fr)] lg:gap-14 xl:gap-20">
+      <div className="grid gap-8 md:gap-10 min-[1200px]:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.75fr)] min-[1200px]:gap-14 xl:gap-20">
         <div
-          className={
+          className={`mx-auto w-full max-w-[760px] min-[1200px]:mx-0 min-[1200px]:max-w-none ${
             hasMultipleImages
-              ? "grid gap-4 md:grid-cols-[80px_minmax(0,1fr)] xl:grid-cols-[96px_minmax(0,1fr)]"
+              ? "grid gap-3 sm:gap-4 md:grid-cols-[80px_minmax(0,1fr)] xl:grid-cols-[96px_minmax(0,1fr)]"
               : "grid"
-          }
+          }`}
         >
           {hasMultipleImages && (
-            <div className="order-2 flex gap-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:order-1 md:flex-col md:overflow-visible">
+            <div className="order-2 flex gap-2.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-3 md:order-1 md:flex-col md:overflow-visible">
               {galleryImages.slice(0, 6).map((image) => {
                 const isActive = image === activeImage;
 
                 return (
                   <button
-                    className={`aspect-square w-[72px] shrink-0 cursor-pointer overflow-hidden bg-surface transition-colors md:w-full ${
+                    className={`aspect-square w-[64px] shrink-0 cursor-pointer overflow-hidden bg-surface transition-colors sm:w-[72px] md:w-full ${
                       isActive
                         ? "border border-text-primary"
                         : "border border-transparent hover:border-border"
@@ -192,42 +192,42 @@ function ProductDetails({ product }: { product: Product }) {
             }`}
           >
             <img
-              className="h-full w-full object-contain p-8 sm:p-12 lg:p-14 xl:p-16"
+              className="h-full w-full object-contain p-6 sm:p-10 md:p-12 min-[1200px]:p-14 xl:p-16"
               src={activeImage}
               alt={product.title}
             />
 
             {hasDiscount && (
-              <span className="absolute left-4 top-4 bg-text-primary px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.1em] text-white">
+              <span className="absolute left-3 top-3 bg-text-primary px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.1em] text-white sm:left-4 sm:top-4 sm:px-3 sm:py-1.5 sm:text-[10px]">
                 Sale
               </span>
             )}
           </div>
         </div>
 
-        <div className="lg:pt-4 xl:pt-8">
-          <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary">
+        <div className="mx-auto w-full max-w-[680px] min-[1200px]:mx-0 min-[1200px]:max-w-none min-[1200px]:pt-4 xl:pt-8">
+          <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:mb-4 sm:text-[11px]">
             {product.brand}
           </p>
 
-          <h1 className="max-w-[560px] font-display text-[42px] leading-[0.98] font-medium tracking-[-0.02em] sm:text-[48px] xl:text-[54px]">
+          <h1 className="max-w-[560px] font-display text-[34px] leading-[0.98] font-medium tracking-[-0.02em] sm:text-[40px] md:text-[46px] min-[1200px]:text-[42px] xl:text-[52px]">
             {product.title}
           </h1>
 
-          <div className="mt-7 flex items-center gap-3">
-            <span className="text-[18px] font-medium">
+          <div className="mt-5 flex flex-wrap items-center gap-2.5 sm:mt-7 sm:gap-3">
+            <span className="text-[16px] font-medium sm:text-[18px]">
               {formatPrice(product.price, product.currency)}
             </span>
 
             {hasDiscount && (
-              <span className="text-[14px] text-text-secondary line-through">
+              <span className="text-[13px] text-text-secondary line-through sm:text-[14px]">
                 {formatPrice(product.compareAtPrice!, product.currency)}
               </span>
             )}
           </div>
 
           {availability && (
-            <div className="mt-5 flex items-center gap-2 text-[12px] text-text-secondary">
+            <div className="mt-4 flex items-center gap-2 text-[11px] text-text-secondary sm:mt-5 sm:text-[12px]">
               <span
                 className={`size-1.5 rounded-full ${
                   availability === "In stock"
@@ -241,7 +241,7 @@ function ProductDetails({ product }: { product: Product }) {
           )}
 
           {hasProductMetadata && (
-            <div className="mt-7 flex flex-wrap gap-x-12 gap-y-5">
+            <div className="mt-6 flex flex-wrap gap-x-10 gap-y-4 sm:mt-7 sm:gap-x-12 sm:gap-y-5">
               {product.size && (
                 <div>
                   <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.15em] text-text-secondary">
@@ -264,7 +264,7 @@ function ProductDetails({ product }: { product: Product }) {
             </div>
           )}
 
-          <div className="my-8 border-t border-border" />
+          <div className="my-6 border-t border-border sm:my-8" />
 
           {product.description ? (
             <div>
@@ -272,19 +272,19 @@ function ProductDetails({ product }: { product: Product }) {
                 Product details
               </p>
 
-              <p className="max-w-[560px] text-[14px] leading-7 text-text-primary/75">
+              <p className="max-w-[560px] text-[13px] leading-6 text-text-primary/75 sm:text-[14px] sm:leading-7">
                 {product.description}
               </p>
             </div>
           ) : (
-            <p className="text-[14px] leading-7 text-text-secondary">
+            <p className="text-[13px] leading-6 text-text-secondary sm:text-[14px] sm:leading-7">
               Additional product information will be available soon.
             </p>
           )}
 
-          <div className="my-8 border-t border-border" />
+          <div className="my-6 border-t border-border sm:my-8" />
 
-          <div className="grid grid-cols-2 gap-6 text-[11px]">
+          <div className="grid grid-cols-2 gap-5 text-[10px] sm:gap-6 sm:text-[11px]">
             <div>
               <p className="mb-1.5 uppercase tracking-[0.12em] text-text-secondary">
                 Brand
@@ -304,15 +304,15 @@ function ProductDetails({ product }: { product: Product }) {
             )}
           </div>
 
-          <div className="mt-10 border-t border-border pt-8">
+          <div className="mt-8 border-t border-border pt-6 sm:mt-10 sm:pt-8">
             <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.15em] text-text-secondary">
               Quantity
             </p>
 
-            <div className="flex gap-3">
-              <div className="flex h-12 shrink-0 items-center border border-border bg-background">
+            <div className="grid grid-cols-[1fr_auto] gap-3 min-[480px]:grid-cols-[auto_minmax(220px,320px)_auto] min-[480px]:justify-start min-[1200px]:grid-cols-[auto_minmax(0,1fr)_auto] min-[1200px]:justify-stretch">
+              <div className="col-start-1 row-start-1 flex h-12 w-fit shrink-0 items-center border border-border bg-background">
                 <button
-                  className="flex h-full w-11 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 disabled:cursor-not-allowed disabled:opacity-25"
+                  className="flex h-full w-10 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 disabled:cursor-not-allowed disabled:opacity-25 sm:w-11"
                   type="button"
                   aria-label="Decrease quantity"
                   disabled={quantity === 1 || isOutOfStock}
@@ -329,7 +329,7 @@ function ProductDetails({ product }: { product: Product }) {
                 </span>
 
                 <button
-                  className="flex h-full w-11 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 disabled:cursor-not-allowed disabled:opacity-25"
+                  className="flex h-full w-10 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 disabled:cursor-not-allowed disabled:opacity-25 sm:w-11"
                   type="button"
                   aria-label="Increase quantity"
                   disabled={isOutOfStock}
@@ -340,7 +340,7 @@ function ProductDetails({ product }: { product: Product }) {
               </div>
 
               <button
-                className="flex h-12 flex-1 cursor-pointer items-center justify-center gap-2.5 bg-text-primary px-5 text-[11px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+                className="col-span-2 row-start-2 flex h-12 w-full cursor-pointer items-center justify-center gap-2.5 bg-text-primary px-5 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40 min-[480px]:col-span-1 min-[480px]:col-start-2 min-[480px]:row-start-1 sm:text-[11px]"
                 type="button"
                 disabled={isOutOfStock}
                 onClick={handleAddToCart}
@@ -351,7 +351,7 @@ function ProductDetails({ product }: { product: Product }) {
               </button>
 
               <button
-                className="flex size-12 shrink-0 cursor-pointer items-center justify-center border border-border text-text-primary transition-colors hover:border-text-primary"
+                className="col-start-2 row-start-1 flex size-12 shrink-0 cursor-pointer items-center justify-center border border-border text-text-primary transition-colors hover:border-text-primary min-[480px]:col-start-3"
                 type="button"
                 aria-label={
                   isFavorite
@@ -454,27 +454,27 @@ function ProductPage() {
   }, [productId, category, initialProduct]);
 
   return (
-    <section className="py-8 md:py-10 xl:py-12">
+    <section className="py-6 sm:py-8 md:py-10 xl:py-12">
       <Container>
         {isLoading && (
           <>
-            <div className="mb-10 h-3 w-[260px] animate-pulse bg-border" />
+            <div className="mb-8 h-3 w-[180px] animate-pulse bg-border sm:mb-10 sm:w-[260px]" />
 
-            <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:gap-14 xl:gap-20">
-              <div className="aspect-square animate-pulse bg-sage" />
+            <div className="grid gap-8 md:gap-10 min-[1200px]:grid-cols-[1.25fr_0.75fr] min-[1200px]:gap-14 xl:gap-20">
+              <div className="mx-auto aspect-square w-full max-w-[760px] animate-pulse bg-sage min-[1200px]:mx-0 min-[1200px]:max-w-none" />
 
-              <div className="pt-4">
+              <div className="mx-auto w-full max-w-[680px] pt-2 sm:pt-4 min-[1200px]:mx-0 min-[1200px]:max-w-none">
                 <div className="h-3 w-24 animate-pulse bg-border" />
 
-                <div className="mt-6 h-12 w-4/5 animate-pulse bg-border" />
+                <div className="mt-5 h-10 w-4/5 animate-pulse bg-border sm:mt-6 sm:h-12" />
 
-                <div className="mt-3 h-12 w-3/5 animate-pulse bg-border" />
+                <div className="mt-3 h-10 w-3/5 animate-pulse bg-border sm:h-12" />
 
-                <div className="mt-8 h-5 w-24 animate-pulse bg-border" />
+                <div className="mt-6 h-5 w-24 animate-pulse bg-border sm:mt-8" />
 
-                <div className="mt-10 h-px bg-border" />
+                <div className="mt-8 h-px bg-border sm:mt-10" />
 
-                <div className="mt-8 h-4 w-full animate-pulse bg-border" />
+                <div className="mt-6 h-4 w-full animate-pulse bg-border sm:mt-8" />
 
                 <div className="mt-3 h-4 w-5/6 animate-pulse bg-border" />
 
@@ -489,15 +489,17 @@ function ProductPage() {
         )}
 
         {!isLoading && !product && error && (
-          <div className="flex min-h-[480px] flex-col items-center justify-center text-center">
+          <div className="flex min-h-[360px] flex-col items-center justify-center py-12 text-center sm:min-h-[420px] md:min-h-[480px]">
             <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary">
               Product
             </p>
 
-            <h1 className="font-display text-[44px] font-medium">{error}</h1>
+            <h1 className="font-display text-[34px] leading-none font-medium sm:text-[40px] md:text-[44px]">
+              {error}
+            </h1>
 
             <Link
-              className="mt-8 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.12em] transition-opacity hover:opacity-60"
+              className="mt-7 inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.12em] transition-opacity hover:opacity-60 sm:mt-8 sm:text-[11px]"
               to="/shop"
             >
               <ArrowLeft size={16} strokeWidth={1.2} />

@@ -44,7 +44,7 @@ function ProductCard({ product }: ProductCardProps) {
           aria-label={`View ${product.title}`}
         >
           <img
-            className="h-full w-full object-contain p-8 transition-transform duration-500 ease-out group-hover:scale-[1.025] md:p-9 xl:p-10"
+            className="h-full w-full object-contain p-5 transition-transform duration-500 ease-out group-hover:scale-[1.025] sm:p-6 md:p-8 xl:p-10"
             src={product.image}
             alt={product.title}
             loading="lazy"
@@ -52,13 +52,13 @@ function ProductCard({ product }: ProductCardProps) {
         </Link>
 
         {hasDiscount && (
-          <span className="absolute left-3 top-3 bg-text-primary px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.08em] text-white">
+          <span className="absolute left-2 top-2 bg-text-primary px-2 py-1 text-[9px] font-medium uppercase tracking-[0.08em] text-white sm:left-3 sm:top-3 sm:px-2.5 sm:text-[10px]">
             Sale
           </span>
         )}
 
         <button
-          className="absolute right-3 top-3 flex size-9 cursor-pointer items-center justify-center rounded-full bg-background/90 text-text-primary transition-[transform,background-color] duration-300 hover:scale-105 hover:bg-background"
+          className="absolute right-2 top-2 flex size-8 cursor-pointer items-center justify-center rounded-full bg-background/90 text-text-primary transition-[transform,background-color] duration-300 hover:scale-105 hover:bg-background sm:right-3 sm:top-3 sm:size-9"
           type="button"
           aria-label={
             isFavorite
@@ -69,31 +69,31 @@ function ProductCard({ product }: ProductCardProps) {
           onClick={handleFavoriteClick}
         >
           <Heart
-            size={18}
+            className="size-4 sm:size-[18px]"
             strokeWidth={1.2}
             fill={isFavorite ? "currentColor" : "none"}
           />
         </button>
       </div>
 
-      <div className="pt-4">
-        <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.12em] text-text-secondary">
+      <div className="pt-3 sm:pt-4">
+        <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary sm:mb-2 sm:text-[11px]">
           {product.brand}
         </p>
 
         <Link className="block" to={productPath} state={{ product }}>
-          <h3 className="line-clamp-2 min-h-10 text-[14px] leading-5">
+          <h3 className="line-clamp-2 min-h-10 text-[13px] leading-5 sm:text-[14px]">
             {product.title}
           </h3>
         </Link>
 
-        <div className="mt-2.5 flex items-center gap-2.5">
-          <span className="text-[14px] font-medium">
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 sm:mt-2.5 sm:gap-x-2.5">
+          <span className="text-[13px] font-medium sm:text-[14px]">
             {formatPrice(product.price, product.currency)}
           </span>
 
           {hasDiscount && (
-            <span className="text-[12px] text-text-secondary line-through">
+            <span className="text-[11px] text-text-secondary line-through sm:text-[12px]">
               {formatPrice(product.compareAtPrice!, product.currency)}
             </span>
           )}

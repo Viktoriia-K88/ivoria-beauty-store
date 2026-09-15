@@ -48,18 +48,21 @@ function AboutSection() {
   }
 
   return (
-    <section className="bg-[#f7f5f1] py-20 md:py-24 xl:py-28">
+    <section
+      id="about"
+      className="scroll-mt-24 bg-[#f7f5f1] py-14 sm:py-16 md:py-20 xl:py-28"
+    >
       <Container>
         <div className="mx-auto max-w-[820px] text-center">
-          <p className="mb-4 text-[13px] font-medium uppercase tracking-[0.18em] text-text-secondary">
+          <p className="mb-3 text-[12px] font-medium uppercase tracking-[0.18em] text-text-secondary sm:text-[13px] md:mb-4">
             About IVORIA
           </p>
 
-          <h2 className="font-display text-[48px] leading-[0.95] font-medium md:text-[62px] xl:text-[72px]">
+          <h2 className="font-display text-[36px] leading-[0.95] font-medium sm:text-[40px] md:text-[50px] lg:text-[56px] xl:text-[64px]">
             Beauty, made simple
           </h2>
 
-          <div className="mx-auto mt-7 max-w-[680px] space-y-4 text-[15px] leading-7 text-text-secondary md:text-[16px]">
+          <div className="mx-auto mt-6 max-w-[680px] space-y-4 text-[14px] leading-6 text-text-secondary md:mt-7 md:text-[15px] md:leading-7">
             <p>
               IVORIA is a multi-brand destination for skincare, makeup,
               fragrance, hair care and body care, bringing established beauty
@@ -75,50 +78,48 @@ function AboutSection() {
           </div>
         </div>
 
-        <div className="mt-16 border-t border-text-primary/15 pt-12 md:mt-20 md:pt-14">
-          <div className="mb-10 md:mb-12">
+        <div
+          id="faq"
+          className="mt-12 scroll-mt-24 border-t border-text-primary/15 pt-10 sm:mt-14 md:mt-16 md:pt-12 xl:mt-20 xl:pt-14"
+        >
+          <div className="mb-8 md:mb-10 xl:mb-12">
             <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary">
               Good to know
             </p>
 
-            <h3 className="font-display text-[38px] leading-none font-medium md:text-[46px]">
+            <h3 className="font-display text-[32px] leading-none font-medium sm:text-[36px] md:text-[42px] xl:text-[46px]">
               Questions, answered
             </h3>
           </div>
 
-          <div className="grid items-start gap-4 md:grid-cols-2 lg:grid-cols-3 xl:gap-5">
+          <div className="grid items-start gap-3 min-[560px]:grid-cols-2 lg:grid-cols-3 xl:gap-4">
             {questions.map((item, index) => {
               const isOpen = openItems.includes(index);
               const answerId = `about-answer-${index}`;
               const number = String(index + 1).padStart(2, "0");
 
               return (
-                <div
-                  className="bg-surface px-5 py-5 md:px-6 md:py-6"
-                  key={item.question}
-                >
+                <div className="bg-surface" key={item.question}>
                   <button
-                    className="w-full cursor-pointer text-left"
+                    className="flex min-h-[72px] w-full cursor-pointer items-center gap-3 px-4 py-3 text-left sm:min-h-[76px] sm:px-5"
                     type="button"
                     aria-expanded={isOpen}
                     aria-controls={answerId}
                     onClick={() => toggleItem(index)}
                   >
-                    <div className="mb-6 flex items-center justify-between">
-                      <span className="text-[10px] font-medium tracking-[0.12em] text-text-secondary">
-                        {number}
-                      </span>
+                    <span className="w-5 shrink-0 text-[9px] font-medium tracking-[0.12em] text-text-secondary">
+                      {number}
+                    </span>
 
-                      {isOpen ? (
-                        <Minus size={17} strokeWidth={1.2} />
-                      ) : (
-                        <Plus size={17} strokeWidth={1.2} />
-                      )}
-                    </div>
-
-                    <h4 className="max-w-[300px] text-[17px] leading-6 font-medium md:text-[18px]">
+                    <h4 className="flex-1 text-[15px] leading-5 font-medium md:text-[16px]">
                       {item.question}
                     </h4>
+
+                    {isOpen ? (
+                      <Minus className="shrink-0" size={16} strokeWidth={1.2} />
+                    ) : (
+                      <Plus className="shrink-0" size={16} strokeWidth={1.2} />
+                    )}
                   </button>
 
                   <div
@@ -128,7 +129,7 @@ function AboutSection() {
                     id={answerId}
                   >
                     <div className="overflow-hidden">
-                      <p className="pt-4 text-[14px] leading-6 text-text-secondary">
+                      <p className="border-t border-text-primary/10 px-4 py-4 text-[13px] leading-5 text-text-secondary sm:px-5 sm:text-[14px] sm:leading-6">
                         {item.answer}
                       </p>
                     </div>

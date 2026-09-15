@@ -29,7 +29,7 @@ function JustInSection() {
           return;
         }
 
-        setError("Unable to load products.");
+        setError("Unable to load fresh picks.");
       } finally {
         if (!controller.signal.aborted) {
           setIsLoading(false);
@@ -45,15 +45,15 @@ function JustInSection() {
   }, []);
 
   return (
-    <section className="py-16 md:py-20 xl:py-24">
+    <section className="py-14 md:py-16 xl:py-24">
       <Container>
-        <div className="mb-10 flex items-end justify-between gap-6 md:mb-12">
+        <div className="mb-8 flex items-end justify-between gap-4 sm:mb-10 md:mb-12">
           <div>
-            <p className="mb-3 text-[13px] font-medium uppercase tracking-[0.18em] text-text-secondary">
+            <p className="mb-3 text-[12px] font-medium uppercase tracking-[0.18em] text-text-secondary sm:text-[13px]">
               New to the edit
             </p>
 
-            <h2 className="font-display text-[44px] leading-none font-medium md:text-[54px] xl:text-[60px]">
+            <h2 className="font-display text-[38px] leading-none font-medium sm:text-[44px] md:text-[54px] xl:text-[60px]">
               Fresh discoveries
             </h2>
           </div>
@@ -62,7 +62,7 @@ function JustInSection() {
             className="group hidden items-center gap-2 border-b border-text-primary pb-1 text-[11px] font-medium uppercase tracking-[0.12em] sm:flex"
             to="/shop"
           >
-            Explore all
+            Shop all
             <ArrowRight
               className="transition-transform duration-300 group-hover:translate-x-1"
               size={16}
@@ -72,7 +72,7 @@ function JustInSection() {
         </div>
 
         {isLoading && (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-5 xl:gap-x-6">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:grid-cols-4 xl:gap-x-6">
             {Array.from({ length: 4 }).map((_, index) => (
               <div key={index}>
                 <div className="aspect-square animate-pulse bg-sage" />
@@ -98,7 +98,7 @@ function JustInSection() {
         )}
 
         {!isLoading && !error && products.length > 0 && (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-5 xl:gap-x-6">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:grid-cols-4 xl:gap-x-6">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -106,10 +106,10 @@ function JustInSection() {
         )}
 
         <Link
-          className="group mt-10 inline-flex items-center gap-2 border-b border-text-primary pb-1 text-[11px] font-medium uppercase tracking-[0.12em] sm:hidden"
+          className="group mt-8 inline-flex items-center gap-2 border-b border-text-primary pb-1 text-[11px] font-medium uppercase tracking-[0.12em] sm:hidden"
           to="/shop"
         >
-          Explore all
+          Shop all
           <ArrowRight
             className="transition-transform duration-300 group-hover:translate-x-1"
             size={16}

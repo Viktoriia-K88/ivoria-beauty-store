@@ -1,13 +1,31 @@
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigationType } from "react-router";
 
+import Footer from "../components/Footer/Footer";
 import Header from "../components/Header/Header";
 
 function MainLayout() {
-  const { pathname, search } = useLocation();
+  const { pathname, search, hash } = useLocation();
   const navigationType = useNavigationType();
 
   useEffect(() => {
+    if (hash) {
+      const elementId = hash.slice(1);
+
+      requestAnimationFrame(() => {
+        const element = document.getElementById(elementId);
+
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      });
+
+      return;
+    }
+
     if (navigationType === "POP") {
       return;
     }
@@ -17,15 +35,15 @@ function MainLayout() {
       left: 0,
       behavior: "auto",
     });
-  }, [pathname, search, navigationType]);
+  }, [pathname, search, hash, navigationType]);
 
   return (
     <>
       <Header />
 
-      <main>
-        <Outlet />
-      </main>
+      <Outlet />
+
+      <Footer />
     </>
   );
 }

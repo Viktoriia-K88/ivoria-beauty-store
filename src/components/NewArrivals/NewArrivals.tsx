@@ -33,15 +33,15 @@ function NewArrivals() {
   }, []);
 
   return (
-    <section className="pb-20 md:pb-24 xl:pb-28">
+    <section className="pb-16 md:pb-20 xl:pb-28">
       <Container>
-        <div className="mb-10 flex items-end justify-between gap-6 md:mb-12">
+        <div className="mb-8 flex items-end justify-between gap-4 sm:mb-10 md:mb-12">
           <div>
-            <p className="mb-3 text-[13px] font-medium uppercase tracking-[0.18em] text-text-secondary">
+            <p className="mb-3 text-[12px] font-medium uppercase tracking-[0.18em] text-text-secondary sm:text-[13px]">
               Curated
             </p>
 
-            <h2 className="font-display text-[44px] leading-none font-medium md:text-[54px] xl:text-[60px]">
+            <h2 className="font-display text-[38px] leading-none font-medium sm:text-[44px] md:text-[54px] xl:text-[60px]">
               The beauty edit
             </h2>
           </div>
@@ -60,7 +60,7 @@ function NewArrivals() {
         </div>
 
         {isLoading && (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:grid-cols-4 xl:gap-x-6 xl:gap-y-12">
             {Array.from({ length: 8 }).map((_, index) => (
               <div key={index}>
                 <div className="aspect-[4/5] animate-pulse bg-sage" />
@@ -86,7 +86,7 @@ function NewArrivals() {
         )}
 
         {!isLoading && !error && products.length > 0 && (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4 xl:gap-x-6 xl:gap-y-12">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:grid-cols-4 xl:gap-x-6 xl:gap-y-12">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -94,7 +94,7 @@ function NewArrivals() {
         )}
 
         <Link
-          className="group mt-10 inline-flex items-center gap-2 border-b border-text-primary pb-1 text-[11px] font-medium uppercase tracking-[0.12em] sm:hidden"
+          className="group mt-8 inline-flex items-center gap-2 border-b border-text-primary pb-1 text-[11px] font-medium uppercase tracking-[0.12em] sm:hidden"
           to="/shop"
         >
           View all
