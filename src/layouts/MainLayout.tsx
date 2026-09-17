@@ -10,18 +10,14 @@ function MainLayout() {
 
   useEffect(() => {
     if (hash) {
-      const elementId = hash.slice(1);
+      const element = document.getElementById(hash.slice(1));
 
-      requestAnimationFrame(() => {
-        const element = document.getElementById(elementId);
-
-        if (element) {
-          element.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
-        }
-      });
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
 
       return;
     }
@@ -38,13 +34,15 @@ function MainLayout() {
   }, [pathname, search, hash, navigationType]);
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <Header />
 
-      <Outlet />
+      <div className="flex-1">
+        <Outlet />
+      </div>
 
       <Footer />
-    </>
+    </div>
   );
 }
 

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Link, NavLink, useNavigate } from "react-router";
 
+import { useAuth } from "../../context/useAuth";
 import { useAppSelector } from "../../store/hooks";
 
 import Container from "../Container/Container";
@@ -326,6 +327,8 @@ const menuPositionClasses = {
 function Header() {
   const navigate = useNavigate();
 
+  const { user } = useAuth();
+
   const favoritesCount = useAppSelector(
     (state) => state.favorites.items.length,
   );
@@ -339,6 +342,9 @@ function Header() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const accountPath = user ? "/account" : "/login";
+  const accountLabel = user ? "Account" : "Sign in";
 
   function closeMenu() {
     setIsMenuOpen(false);
@@ -528,8 +534,8 @@ function Header() {
 
               <Link
                 className="hidden transition-opacity hover:opacity-60 min-[900px]:flex"
-                to="/account"
-                aria-label="Account"
+                to={accountPath}
+                aria-label={accountLabel}
               >
                 <UserRound
                   className="size-5 xl:size-[22px] 2xl:size-[25px]"
@@ -691,11 +697,11 @@ function Header() {
 
               <Link
                 className="flex items-center gap-3 text-[12px] uppercase tracking-[0.08em] transition-opacity hover:opacity-60"
-                to="/account"
+                to={accountPath}
                 onClick={closeMenu}
               >
                 <UserRound size={18} strokeWidth={1.15} />
-                Account
+                {accountLabel}
               </Link>
 
               <Link

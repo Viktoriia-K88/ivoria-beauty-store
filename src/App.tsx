@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router";
 
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
 
 import Account from "./pages/Account/Account";
@@ -25,7 +26,16 @@ function App() {
         <Route path="checkout" element={<Checkout />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="account" element={<Account />} />
+
+        <Route
+          path="account"
+          element={
+            <ProtectedRoute>
+              <Account />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
