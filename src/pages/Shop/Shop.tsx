@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
-import { Link, useNavigate, useSearchParams } from "react-router";
+import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
+import {
+  Link,
+  useNavigate,
+  useNavigationType,
+  useSearchParams,
+} from "react-router";
 
 import Container from "../../components/Container/Container";
 import ProductCard from "../../components/ProductCard/ProductCard";
@@ -172,6 +177,58 @@ function buildShopPath(
   return query ? `/shop?${query}` : "/shop";
 }
 
+function getCurrentPageFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+
+  const page = Number(params.get("page") || "1");
+
+  if (!Number.isInteger(page) || page < 1) {
+    return 1;
+  }
+
+  return page;
+}
+
+function replacePageInUrl(page: number) {
+  const url = new URL(window.location.href);
+
+  if (page <= 1) {
+    url.searchParams.delete("page");
+  } else {
+    url.searchParams.set("page", String(page));
+  }
+
+  const query = url.searchParams.toString();
+
+  const nextUrl = `${url.pathname}${query ? `?${query}` : ""}${url.hash}`;
+
+  window.history.replaceState(window.history.state, "", nextUrl);
+}
+
+function getStoredScrollPosition(key: string) {
+  try {
+    const value = sessionStorage.getItem(key);
+
+    if (value === null) {
+      return null;
+    }
+
+    const position = Number(value);
+
+    return Number.isFinite(position) ? position : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveScrollPosition(key: string, position: number) {
+  try {
+    sessionStorage.setItem(key, String(position));
+  } catch {
+    // Ignore storage errors.
+  }
+}
+
 function ShopCatalog({
   activeCategory,
   initialSearch,
@@ -179,8 +236,19 @@ function ShopCatalog({
   activeBrand,
 }: ShopCatalogProps) {
   const navigate = useNavigate();
+  const navigationType = useNavigationType();
 
-  const sortRef = useRef<HTMLDivElement>(null);
+  const scrollStorageKey = `ivoria-shop-scroll:${activeCategory.value}:${initialSearch}:${activeType}:${activeBrand}`;
+
+  const [initialSavedScrollPosition] = useState<number | null>(() =>
+    navigationType === "POP" ? getStoredScrollPosition(scrollStorageKey) : null,
+  );
+
+  const savedScrollPositionRef = useRef<number | null>(
+    initialSavedScrollPosition,
+  );
+
+  const shouldRestoreScrollRef = useRef(initialSavedScrollPosition !== null);
 
   const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
@@ -196,7 +264,6 @@ function ShopCatalog({
 
   const [sort, setSort] = useState("featured");
 
-  const [isSortOpen, setIsSortOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   const [minPrice, setMinPrice] = useState("");
@@ -206,16 +273,39 @@ function ShopCatalog({
 
   const activeFilterCount = Number(minPrice !== "") + Number(maxPrice !== "");
 
-  const activeSort =
-    sortOptions.find((option) => option.value === sort) || sortOptions[0];
-
   const catalogFilter = activeBrand || activeType;
 
   const catalogFilterLabel = filterLabels[catalogFilter] || catalogFilter;
 
   useEffect(() => {
+    function handleScroll() {
+      if (shouldRestoreScrollRef.current) {
+        return;
+      }
+
+      saveScrollPosition(scrollStorageKey, window.scrollY);
+    }
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [scrollStorageKey]);
+
+  useEffect(() => {
     const timeout = window.setTimeout(() => {
-      setDebouncedSearch(search.trim());
+      const nextSearch = search.trim();
+
+      setDebouncedSearch((currentSearch) => {
+        if (currentSearch !== nextSearch) {
+          replacePageInUrl(1);
+        }
+
+        return nextSearch;
+      });
     }, 400);
 
     return () => {
@@ -234,7 +324,9 @@ function ShopCatalog({
         setTotal(0);
         setCurrentPage(1);
 
-        const data = await getProductsPage(
+        const requestedPage = getCurrentPageFromUrl();
+
+        const firstPageData = await getProductsPage(
           {
             category: activeCategory.value,
             type: activeType,
@@ -249,8 +341,48 @@ function ShopCatalog({
           controller.signal,
         );
 
-        setProducts(data.products);
-        setTotal(data.total);
+        const loadedProducts = [...firstPageData.products];
+
+        let loadedPage = 1;
+
+        const maxPage = Math.max(
+          1,
+          Math.ceil(firstPageData.total / PRODUCTS_PER_PAGE),
+        );
+
+        const targetPage = Math.min(requestedPage, maxPage);
+
+        for (let page = 2; page <= targetPage; page += 1) {
+          const pageData = await getProductsPage(
+            {
+              category: activeCategory.value,
+              type: activeType,
+              brand: activeBrand,
+              page,
+              limit: PRODUCTS_PER_PAGE,
+              search: debouncedSearch,
+              sort,
+              minPrice: minPrice === "" ? null : Number(minPrice),
+              maxPrice: maxPrice === "" ? null : Number(maxPrice),
+            },
+            controller.signal,
+          );
+
+          if (pageData.products.length === 0) {
+            break;
+          }
+
+          loadedProducts.push(...pageData.products);
+          loadedPage = page;
+        }
+
+        setProducts(loadedProducts);
+        setTotal(firstPageData.total);
+        setCurrentPage(loadedPage);
+
+        if (requestedPage !== loadedPage) {
+          replacePageInUrl(loadedPage);
+        }
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
           return;
@@ -280,30 +412,30 @@ function ShopCatalog({
   ]);
 
   useEffect(() => {
-    if (!isSortOpen) {
+    if (
+      isLoading ||
+      !shouldRestoreScrollRef.current ||
+      savedScrollPositionRef.current === null
+    ) {
       return;
     }
 
-    function handlePointerDown(event: MouseEvent) {
-      if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
-        setIsSortOpen(false);
-      }
-    }
+    const frame = window.requestAnimationFrame(() => {
+      window.scrollTo({
+        top: savedScrollPositionRef.current ?? 0,
+        left: 0,
+        behavior: "auto",
+      });
 
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setIsSortOpen(false);
-      }
-    }
+      shouldRestoreScrollRef.current = false;
 
-    document.addEventListener("mousedown", handlePointerDown);
-    window.addEventListener("keydown", handleKeyDown);
+      saveScrollPosition(scrollStorageKey, savedScrollPositionRef.current ?? 0);
+    });
 
     return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-      window.removeEventListener("keydown", handleKeyDown);
+      window.cancelAnimationFrame(frame);
     };
-  }, [isSortOpen]);
+  }, [isLoading, products.length, scrollStorageKey]);
 
   async function handleLoadMore() {
     if (!canLoadMore || isLoadingMore) {
@@ -332,6 +464,8 @@ function ShopCatalog({
 
       setCurrentPage(nextPage);
       setTotal(data.total);
+
+      replacePageInUrl(nextPage);
     } catch {
       setError("Unable to load more products.");
     } finally {
@@ -340,11 +474,26 @@ function ShopCatalog({
   }
 
   function handleSortChange(value: string) {
+    if (value !== sort) {
+      replacePageInUrl(1);
+    }
+
     setSort(value);
-    setIsSortOpen(false);
+  }
+
+  function handleMinPriceChange(value: string) {
+    replacePageInUrl(1);
+    setMinPrice(value);
+  }
+
+  function handleMaxPriceChange(value: string) {
+    replacePageInUrl(1);
+    setMaxPrice(value);
   }
 
   function clearSearch() {
+    replacePageInUrl(1);
+
     setSearch("");
     setDebouncedSearch("");
 
@@ -370,12 +519,14 @@ function ShopCatalog({
   }
 
   function clearFilters() {
+    replacePageInUrl(1);
+
     setMinPrice("");
     setMaxPrice("");
   }
 
   return (
-    <section className="pt-8 pb-14 sm:pt-10 sm:pb-16 md:pt-14 md:pb-20 xl:pt-20 xl:pb-24">
+    <main className="pt-8 pb-14 sm:pt-10 sm:pb-16 md:pt-14 md:pb-20 xl:pt-20 xl:pb-24">
       <Container>
         <div className="border-b border-border pb-8 sm:pb-10 md:pb-12">
           <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:text-[12px] sm:tracking-[0.18em]">
@@ -407,6 +558,7 @@ function ShopCatalog({
                 }`}
                 key={category.value}
                 to={category.path}
+                aria-current={isActive ? "page" : undefined}
               >
                 {category.label}
               </Link>
@@ -421,6 +573,7 @@ function ShopCatalog({
                 className="absolute left-0 top-1/2 -translate-y-1/2"
                 size={18}
                 strokeWidth={1.2}
+                aria-hidden="true"
               />
 
               <input
@@ -442,7 +595,7 @@ function ShopCatalog({
                   aria-label="Clear search"
                   onClick={clearSearch}
                 >
-                  <X size={16} strokeWidth={1.2} />
+                  <X size={16} strokeWidth={1.2} aria-hidden="true" />
                 </button>
               )}
             </div>
@@ -452,9 +605,14 @@ function ShopCatalog({
                 className="flex shrink-0 cursor-pointer items-center gap-2 text-[10px] font-medium uppercase tracking-[0.12em] transition-opacity hover:opacity-60 sm:text-[11px]"
                 type="button"
                 aria-expanded={isFiltersOpen}
+                aria-controls="shop-price-filters"
                 onClick={() => setIsFiltersOpen((current) => !current)}
               >
-                <SlidersHorizontal size={16} strokeWidth={1.2} />
+                <SlidersHorizontal
+                  size={16}
+                  strokeWidth={1.2}
+                  aria-hidden="true"
+                />
                 Filters
                 {activeFilterCount > 0 && (
                   <span className="flex size-4 items-center justify-center rounded-full bg-text-primary text-[9px] text-white">
@@ -463,65 +621,39 @@ function ShopCatalog({
                 )}
               </button>
 
-              <div className="relative" ref={sortRef}>
-                <button
-                  className="flex cursor-pointer items-center gap-1.5 py-2 text-[10px] font-medium uppercase tracking-[0.1em] transition-opacity hover:opacity-60 sm:gap-2 sm:text-[11px]"
-                  type="button"
-                  aria-haspopup="listbox"
-                  aria-expanded={isSortOpen}
-                  onClick={() => setIsSortOpen((current) => !current)}
+              <div className="relative">
+                <label className="sr-only" htmlFor="shop-sort">
+                  Sort products
+                </label>
+
+                <select
+                  id="shop-sort"
+                  className="cursor-pointer appearance-none bg-transparent py-2 pr-6 text-[10px] font-medium uppercase tracking-[0.1em] outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-text-primary sm:text-[11px]"
+                  value={sort}
+                  onChange={(event) => handleSortChange(event.target.value)}
                 >
-                  <span>{activeSort.label}</span>
+                  {sortOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
 
-                  <ChevronDown
-                    className={`shrink-0 transition-transform duration-200 ${
-                      isSortOpen ? "rotate-180" : ""
-                    }`}
-                    size={14}
-                    strokeWidth={1.2}
-                  />
-                </button>
-
-                <div
-                  className={`absolute right-0 top-[calc(100%+6px)] z-30 w-[210px] origin-top-right border border-border bg-background p-1.5 shadow-[0_12px_30px_rgba(31,30,28,0.08)] transition-[opacity,transform] duration-200 sm:w-[220px] ${
-                    isSortOpen
-                      ? "pointer-events-auto translate-y-0 opacity-100"
-                      : "pointer-events-none -translate-y-1 opacity-0"
-                  }`}
-                  role="listbox"
-                  aria-label="Sort products"
-                >
-                  {sortOptions.map((option) => {
-                    const isActive = sort === option.value;
-
-                    return (
-                      <button
-                        className="flex w-full cursor-pointer items-center justify-between gap-4 px-3 py-2.5 text-left text-[10px] uppercase tracking-[0.08em] transition-colors hover:bg-sage sm:text-[11px]"
-                        type="button"
-                        role="option"
-                        aria-selected={isActive}
-                        key={option.value}
-                        onClick={() => handleSortChange(option.value)}
-                      >
-                        <span>{option.label}</span>
-
-                        {isActive && (
-                          <Check
-                            className="shrink-0"
-                            size={14}
-                            strokeWidth={1.3}
-                          />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+                <ChevronDown
+                  className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2"
+                  size={14}
+                  strokeWidth={1.2}
+                  aria-hidden="true"
+                />
               </div>
             </div>
           </div>
 
           {isFiltersOpen && (
-            <div className="mt-5 flex flex-col gap-4 border-t border-border pt-5 min-[420px]:flex-row min-[420px]:items-end min-[420px]:gap-5 sm:mt-6">
+            <div
+              id="shop-price-filters"
+              className="mt-5 flex flex-col gap-4 border-t border-border pt-5 min-[420px]:flex-row min-[420px]:items-end min-[420px]:gap-5 sm:mt-6"
+            >
               <label className="flex flex-col gap-2" htmlFor="min-price">
                 <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary">
                   Min price
@@ -535,7 +667,7 @@ function ShopCatalog({
                   min="0"
                   placeholder="$0"
                   value={minPrice}
-                  onChange={(event) => setMinPrice(event.target.value)}
+                  onChange={(event) => handleMinPriceChange(event.target.value)}
                 />
               </label>
 
@@ -552,7 +684,7 @@ function ShopCatalog({
                   min="0"
                   placeholder="$300"
                   value={maxPrice}
-                  onChange={(event) => setMaxPrice(event.target.value)}
+                  onChange={(event) => handleMaxPriceChange(event.target.value)}
                 />
               </label>
 
@@ -571,7 +703,10 @@ function ShopCatalog({
 
         <div className="flex min-h-12 flex-wrap items-center gap-3 sm:min-h-14">
           {!isLoading && (
-            <p className="text-[11px] text-text-secondary sm:text-[12px]">
+            <p
+              className="text-[11px] text-text-secondary sm:text-[12px]"
+              aria-live="polite"
+            >
               Showing {products.length} of {total} products
             </p>
           )}
@@ -584,29 +719,38 @@ function ShopCatalog({
             >
               {catalogFilterLabel}
 
-              <X size={12} strokeWidth={1.2} />
+              <X size={12} strokeWidth={1.2} aria-hidden="true" />
             </button>
           )}
         </div>
 
         {isLoading && (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:grid-cols-4 xl:gap-x-6 xl:gap-y-12">
-            {Array.from({ length: 8 }).map((_, index) => (
-              <div key={index}>
-                <div className="aspect-square animate-pulse bg-sage" />
+          <>
+            <p className="sr-only" role="status">
+              Loading products...
+            </p>
 
-                <div className="mt-3 h-3 w-1/3 animate-pulse bg-border sm:mt-4" />
+            <div
+              className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:grid-cols-4 xl:gap-x-6 xl:gap-y-12"
+              aria-hidden="true"
+            >
+              {Array.from({ length: 8 }).map((_, index) => (
+                <div key={index}>
+                  <div className="aspect-square animate-pulse bg-sage" />
 
-                <div className="mt-3 h-4 w-4/5 animate-pulse bg-border" />
+                  <div className="mt-3 h-3 w-1/3 animate-pulse bg-border sm:mt-4" />
 
-                <div className="mt-3 h-4 w-1/4 animate-pulse bg-border" />
-              </div>
-            ))}
-          </div>
+                  <div className="mt-3 h-4 w-4/5 animate-pulse bg-border" />
+
+                  <div className="mt-3 h-4 w-1/4 animate-pulse bg-border" />
+                </div>
+              ))}
+            </div>
+          </>
         )}
 
         {!isLoading && error && products.length === 0 && (
-          <div className="py-16 text-center md:py-20">
+          <div className="py-16 text-center md:py-20" role="alert">
             <p className="text-[13px] text-text-secondary sm:text-[14px]">
               {error}
             </p>
@@ -649,12 +793,15 @@ function ShopCatalog({
         )}
 
         {!isLoading && error && products.length > 0 && (
-          <p className="mt-8 text-center text-[13px] text-text-secondary">
+          <p
+            className="mt-8 text-center text-[13px] text-text-secondary"
+            role="alert"
+          >
             {error}
           </p>
         )}
       </Container>
-    </section>
+    </main>
   );
 }
 
@@ -662,8 +809,11 @@ function Shop() {
   const [searchParams] = useSearchParams();
 
   const categoryParam = searchParams.get("category") || "all";
+
   const initialSearch = searchParams.get("search") || "";
+
   const activeType = searchParams.get("type") || "";
+
   const activeBrand = searchParams.get("brand") || "";
 
   const activeCategory =

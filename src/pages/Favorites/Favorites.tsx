@@ -26,6 +26,7 @@ function Favorites() {
               className="mb-5 text-text-secondary sm:mb-6"
               size={32}
               strokeWidth={1}
+              aria-hidden="true"
             />
 
             <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:text-[12px]">
@@ -42,7 +43,7 @@ function Favorites() {
             </p>
 
             <Link
-              className="mt-7 inline-flex min-h-11 items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 sm:mt-8 sm:min-h-12 sm:px-8 sm:text-[11px]"
+              className="mt-7 inline-flex min-h-11 items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary sm:mt-8 sm:min-h-12 sm:px-8 sm:text-[11px]"
               to="/shop"
             >
               Explore products
@@ -73,7 +74,7 @@ function Favorites() {
             </div>
 
             <button
-              className="cursor-pointer text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary underline decoration-border underline-offset-4 transition-colors hover:text-text-primary"
+              className="cursor-pointer text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary underline decoration-border underline-offset-4 transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary"
               type="button"
               onClick={handleClearFavorites}
             >

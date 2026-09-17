@@ -71,7 +71,7 @@ function Account() {
                 </p>
 
                 <button
-                  className="h-12 cursor-pointer border border-text-primary bg-transparent px-6 text-[10px] font-medium uppercase tracking-[0.12em] transition-colors hover:bg-text-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:text-[11px]"
+                  className="h-12 cursor-pointer border border-text-primary bg-transparent px-6 text-[10px] font-medium uppercase tracking-[0.12em] transition-colors hover:bg-text-primary hover:text-white focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary disabled:cursor-not-allowed disabled:opacity-50 sm:text-[11px]"
                   type="button"
                   disabled={isSigningOut}
                   onClick={handleSignOut}

@@ -43,6 +43,7 @@ function Cart() {
               className="mb-5 text-text-secondary sm:mb-6"
               size={34}
               strokeWidth={1}
+              aria-hidden="true"
             />
 
             <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:text-[12px]">
@@ -59,7 +60,7 @@ function Cart() {
             </p>
 
             <Link
-              className="mt-7 inline-flex min-h-11 items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 sm:mt-8 sm:min-h-12 sm:px-8 sm:text-[11px]"
+              className="mt-7 inline-flex min-h-11 items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary sm:mt-8 sm:min-h-12 sm:px-8 sm:text-[11px]"
               to="/shop"
             >
               Continue shopping
@@ -84,13 +85,16 @@ function Cart() {
                 Shopping bag
               </h1>
 
-              <p className="mt-3 text-[12px] text-text-secondary sm:text-[13px]">
+              <p
+                className="mt-3 text-[12px] text-text-secondary sm:text-[13px]"
+                aria-live="polite"
+              >
                 {totalQuantity} {totalQuantity === 1 ? "item" : "items"}
               </p>
             </div>
 
             <button
-              className="cursor-pointer text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary underline decoration-border underline-offset-4 transition-colors hover:text-text-primary"
+              className="cursor-pointer text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary underline decoration-border underline-offset-4 transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary"
               type="button"
               onClick={() => dispatch(clearCart())}
             >
@@ -115,7 +119,7 @@ function Cart() {
                     key={product.id}
                   >
                     <Link
-                      className="aspect-square overflow-hidden bg-surface"
+                      className="aspect-square overflow-hidden bg-surface focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary"
                       to={productPath}
                       state={{ product }}
                       aria-label={`View ${product.title}`}
@@ -135,7 +139,7 @@ function Cart() {
                           </p>
 
                           <Link
-                            className="transition-opacity hover:opacity-60"
+                            className="transition-opacity hover:opacity-60 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary"
                             to={productPath}
                             state={{ product }}
                           >
@@ -146,7 +150,7 @@ function Cart() {
                         </div>
 
                         <button
-                          className="flex shrink-0 cursor-pointer items-center justify-center text-text-secondary transition-colors hover:text-text-primary"
+                          className="flex shrink-0 cursor-pointer items-center justify-center text-text-secondary transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary"
                           type="button"
                           aria-label={`Remove ${product.title} from cart`}
                           onClick={() => dispatch(removeFromCart(product.id))}
@@ -154,6 +158,7 @@ function Cart() {
                           <Trash2
                             className="size-[17px] sm:size-5"
                             strokeWidth={1.1}
+                            aria-hidden="true"
                           />
                         </button>
                       </div>
@@ -165,14 +170,18 @@ function Cart() {
                       <div className="mt-auto flex flex-wrap items-end justify-between gap-3 pt-4 sm:gap-4 sm:pt-5">
                         <div className="flex h-9 items-center border border-border sm:h-10">
                           <button
-                            className="flex h-full w-8 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 sm:w-9"
+                            className="flex h-full w-8 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-[-2px] focus-visible:outline-text-primary sm:w-9"
                             type="button"
                             aria-label={`Decrease quantity of ${product.title}`}
                             onClick={() =>
                               dispatch(decreaseQuantity(product.id))
                             }
                           >
-                            <Minus size={13} strokeWidth={1.2} />
+                            <Minus
+                              size={13}
+                              strokeWidth={1.2}
+                              aria-hidden="true"
+                            />
                           </button>
 
                           <span
@@ -183,14 +192,18 @@ function Cart() {
                           </span>
 
                           <button
-                            className="flex h-full w-8 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 sm:w-9"
+                            className="flex h-full w-8 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-[-2px] focus-visible:outline-text-primary sm:w-9"
                             type="button"
                             aria-label={`Increase quantity of ${product.title}`}
                             onClick={() =>
                               dispatch(increaseQuantity(product.id))
                             }
                           >
-                            <Plus size={13} strokeWidth={1.2} />
+                            <Plus
+                              size={13}
+                              strokeWidth={1.2}
+                              aria-hidden="true"
+                            />
                           </button>
                         </div>
 
@@ -205,9 +218,9 @@ function Cart() {
             </div>
 
             <aside className="mx-auto w-full max-w-[620px] border border-border bg-surface p-5 sm:p-6 md:p-8 min-[1100px]:sticky min-[1100px]:top-28 min-[1100px]:mx-0 min-[1100px]:max-w-none">
-              <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:mb-6">
+              <h2 className="mb-5 text-[10px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:mb-6">
                 Order summary
-              </p>
+              </h2>
 
               <div className="flex items-center justify-between gap-5 border-b border-border pb-5 text-[13px]">
                 <span>Subtotal</span>
@@ -238,14 +251,14 @@ function Cart() {
               </p>
 
               <Link
-                className="mx-auto mt-6 flex min-h-11 w-full items-center justify-center bg-text-primary px-5 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 min-[480px]:max-w-[360px] sm:mt-7 sm:min-h-12 sm:px-6 sm:text-[11px] min-[1100px]:max-w-none"
+                className="mx-auto mt-6 flex min-h-11 w-full items-center justify-center bg-text-primary px-5 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary min-[480px]:max-w-[360px] sm:mt-7 sm:min-h-12 sm:px-6 sm:text-[11px] min-[1100px]:max-w-none"
                 to="/checkout"
               >
                 Proceed to checkout
               </Link>
 
               <Link
-                className="mt-4 flex w-full items-center justify-center text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary transition-colors hover:text-text-primary"
+                className="mt-4 flex w-full items-center justify-center text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary"
                 to="/shop"
               >
                 Continue shopping
