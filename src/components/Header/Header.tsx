@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useRef, useState } from "react";
+import { type SyntheticEvent, useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   Heart,
@@ -359,7 +359,7 @@ function Header() {
     setIsSearchOpen(false);
   }
 
-  function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSearchSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const query = searchQuery.trim();
@@ -421,6 +421,7 @@ function Header() {
               type="button"
               aria-label="Open menu"
               aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu"
               onClick={() => setIsMenuOpen(true)}
             >
               <Menu size={22} strokeWidth={1.15} />
@@ -452,7 +453,7 @@ function Header() {
 
                       {item.menu && (
                         <div
-                          className={`invisible absolute top-full z-50 w-[540px] pt-6 opacity-0 transition-[opacity,visibility] duration-200 group-hover:visible group-hover:opacity-100 ${
+                          className={`invisible absolute top-full z-50 w-[540px] pt-6 opacity-0 transition-[opacity,visibility] duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 ${
                             menuPositionClasses[align]
                           }`}
                         >
@@ -524,6 +525,7 @@ function Header() {
                 type="button"
                 aria-label="Search"
                 aria-expanded={isSearchOpen}
+                aria-controls="header-search-panel"
                 onClick={openSearch}
               >
                 <Search
@@ -592,11 +594,13 @@ function Header() {
       />
 
       <div
+        id="header-search-panel"
         className={`fixed inset-x-0 top-[72px] z-50 border-b border-border bg-background transition-[opacity,transform] duration-250 min-[900px]:top-20 ${
           isSearchOpen
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-2 opacity-0"
         }`}
+        inert={!isSearchOpen}
       >
         <Container>
           <div className="flex h-16 items-center gap-8 min-[900px]:h-[68px]">
@@ -610,7 +614,7 @@ function Header() {
                 ref={searchInputRef}
                 id="header-search"
                 name="search"
-                className="w-full bg-transparent font-display text-[18px] outline-none placeholder:text-text-secondary/60 md:text-[20px]"
+                className="w-full bg-transparent font-display text-[18px] outline-none placeholder:text-text-secondary/60 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary md:text-[20px]"
                 type="text"
                 inputMode="search"
                 value={searchQuery}
@@ -633,6 +637,7 @@ function Header() {
       </div>
 
       <div
+        id="mobile-menu"
         className={`fixed inset-0 z-50 bg-black/20 transition-opacity min-[900px]:hidden ${
           isMenuOpen
             ? "pointer-events-auto opacity-100 duration-[400ms]"
@@ -689,6 +694,8 @@ function Header() {
               <button
                 className="flex cursor-pointer items-center gap-3 text-[12px] uppercase tracking-[0.08em] transition-opacity hover:opacity-60"
                 type="button"
+                aria-expanded={isSearchOpen}
+                aria-controls="header-search-panel"
                 onClick={openSearch}
               >
                 <Search size={18} strokeWidth={1.15} />

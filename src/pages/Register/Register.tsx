@@ -93,7 +93,7 @@ function Register() {
   }
 
   const inputClassName =
-    "h-12 w-full border border-border bg-surface px-4 text-[13px] outline-none transition-colors placeholder:text-text-secondary/55 focus:border-text-primary";
+    "h-12 w-full border border-border bg-surface px-4 text-[13px] outline-none transition-colors placeholder:text-text-secondary/55 focus:border-text-primary focus-visible:ring-1 focus-visible:ring-text-primary";
 
   const labelClassName =
     "mb-2 block text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary";
@@ -133,10 +133,16 @@ function Register() {
                     id="firstName"
                     type="text"
                     autoComplete="given-name"
+                    aria-invalid={errors.firstName ? "true" : "false"}
+                    aria-describedby={
+                      errors.firstName ? "first-name-error" : undefined
+                    }
                   />
 
                   {errors.firstName && (
-                    <p className={errorClassName}>{errors.firstName.message}</p>
+                    <p id="first-name-error" className={errorClassName}>
+                      {errors.firstName.message}
+                    </p>
                   )}
                 </div>
 
@@ -151,10 +157,16 @@ function Register() {
                     id="lastName"
                     type="text"
                     autoComplete="family-name"
+                    aria-invalid={errors.lastName ? "true" : "false"}
+                    aria-describedby={
+                      errors.lastName ? "last-name-error" : undefined
+                    }
                   />
 
                   {errors.lastName && (
-                    <p className={errorClassName}>{errors.lastName.message}</p>
+                    <p id="last-name-error" className={errorClassName}>
+                      {errors.lastName.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -171,10 +183,14 @@ function Register() {
                   type="email"
                   autoComplete="email"
                   placeholder="you@example.com"
+                  aria-invalid={errors.email ? "true" : "false"}
+                  aria-describedby={errors.email ? "email-error" : undefined}
                 />
 
                 {errors.email && (
-                  <p className={errorClassName}>{errors.email.message}</p>
+                  <p id="email-error" className={errorClassName}>
+                    {errors.email.message}
+                  </p>
                 )}
               </div>
 
@@ -189,10 +205,16 @@ function Register() {
                   id="password"
                   type="password"
                   autoComplete="new-password"
+                  aria-invalid={errors.password ? "true" : "false"}
+                  aria-describedby={
+                    errors.password ? "password-error" : undefined
+                  }
                 />
 
                 {errors.password && (
-                  <p className={errorClassName}>{errors.password.message}</p>
+                  <p id="password-error" className={errorClassName}>
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
 
@@ -207,10 +229,16 @@ function Register() {
                   id="confirmPassword"
                   type="password"
                   autoComplete="new-password"
+                  aria-invalid={errors.confirmPassword ? "true" : "false"}
+                  aria-describedby={
+                    errors.confirmPassword
+                      ? "confirm-password-error"
+                      : undefined
+                  }
                 />
 
                 {errors.confirmPassword && (
-                  <p className={errorClassName}>
+                  <p id="confirm-password-error" className={errorClassName}>
                     {errors.confirmPassword.message}
                   </p>
                 )}
@@ -226,7 +254,7 @@ function Register() {
               )}
 
               <button
-                className="flex h-12 w-full cursor-pointer items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 sm:text-[11px]"
+                className="flex h-12 w-full cursor-pointer items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary disabled:cursor-not-allowed disabled:opacity-50 sm:text-[11px]"
                 type="submit"
                 disabled={isSubmitting}
               >
@@ -237,7 +265,7 @@ function Register() {
             <p className="mt-6 text-center text-[12px] text-text-secondary">
               Already have an account?
               <Link
-                className="ml-1.5 text-text-primary underline decoration-border underline-offset-4 transition-opacity hover:opacity-60"
+                className="ml-1.5 text-text-primary underline decoration-border underline-offset-4 transition-opacity hover:opacity-60 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary"
                 to="/login"
               >
                 Sign in

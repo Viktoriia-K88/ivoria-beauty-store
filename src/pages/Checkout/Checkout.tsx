@@ -103,7 +103,7 @@ function Checkout() {
         <Container>
           <section className="flex min-h-[calc(100vh-72px)] flex-col items-center justify-center py-14 text-center sm:py-16 md:py-20 min-[900px]:min-h-[calc(100vh-80px)]">
             <div className="mb-6 flex size-13 items-center justify-center rounded-full border border-text-primary sm:mb-7 sm:size-14">
-              <Check size={24} strokeWidth={1.2} />
+              <Check size={24} strokeWidth={1.2} aria-hidden="true" />
             </div>
 
             <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:text-[12px]">
@@ -120,7 +120,7 @@ function Checkout() {
             </p>
 
             <Link
-              className="mt-7 inline-flex min-h-11 items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 sm:mt-8 sm:min-h-12 sm:px-8 sm:text-[11px]"
+              className="mt-7 inline-flex min-h-11 items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary sm:mt-8 sm:min-h-12 sm:px-8 sm:text-[11px]"
               to="/shop"
             >
               Continue shopping
@@ -140,6 +140,7 @@ function Checkout() {
               className="mb-5 text-text-secondary sm:mb-6"
               size={34}
               strokeWidth={1}
+              aria-hidden="true"
             />
 
             <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:text-[12px]">
@@ -155,7 +156,7 @@ function Checkout() {
             </p>
 
             <Link
-              className="mt-7 inline-flex min-h-11 items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 sm:mt-8 sm:min-h-12 sm:px-8 sm:text-[11px]"
+              className="mt-7 inline-flex min-h-11 items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary sm:mt-8 sm:min-h-12 sm:px-8 sm:text-[11px]"
               to="/shop"
             >
               Explore products
@@ -167,7 +168,7 @@ function Checkout() {
   }
 
   const inputClassName =
-    "h-11 w-full border border-border bg-background px-3 text-[13px] outline-none transition-colors placeholder:text-text-secondary/60 focus:border-text-primary sm:h-12 sm:px-4";
+    "h-11 w-full border border-border bg-background px-3 text-[13px] outline-none transition-colors placeholder:text-text-secondary/60 focus:border-text-primary focus-visible:ring-1 focus-visible:ring-text-primary sm:h-12 sm:px-4";
 
   const labelClassName =
     "mb-2 block text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary";
@@ -179,10 +180,10 @@ function Checkout() {
       <Container>
         <section className="py-8 sm:py-10 md:py-14 xl:py-16">
           <Link
-            className="mb-7 inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary transition-colors hover:text-text-primary sm:mb-8"
+            className="mb-7 inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary sm:mb-8"
             to="/cart"
           >
-            <ChevronLeft size={15} strokeWidth={1.2} />
+            <ChevronLeft size={15} strokeWidth={1.2} aria-hidden="true" />
             Back to bag
           </Link>
 
@@ -222,13 +223,17 @@ function Checkout() {
                     {...register("email")}
                     className={inputClassName}
                     id="email"
+                    aria-invalid={errors.email ? "true" : "false"}
+                    aria-describedby={errors.email ? "email-error" : undefined}
                     type="email"
                     autoComplete="email"
                     placeholder="you@example.com"
                   />
 
                   {errors.email && (
-                    <p className={errorClassName}>{errors.email.message}</p>
+                    <p id="email-error" className={errorClassName}>
+                      {errors.email.message}
+                    </p>
                   )}
                 </div>
               </section>
@@ -256,12 +261,16 @@ function Checkout() {
                       {...register("firstName")}
                       className={inputClassName}
                       id="firstName"
+                      aria-invalid={errors.firstName ? "true" : "false"}
+                      aria-describedby={
+                        errors.firstName ? "first-name-error" : undefined
+                      }
                       type="text"
                       autoComplete="given-name"
                     />
 
                     {errors.firstName && (
-                      <p className={errorClassName}>
+                      <p id="first-name-error" className={errorClassName}>
                         {errors.firstName.message}
                       </p>
                     )}
@@ -276,12 +285,16 @@ function Checkout() {
                       {...register("lastName")}
                       className={inputClassName}
                       id="lastName"
+                      aria-invalid={errors.lastName ? "true" : "false"}
+                      aria-describedby={
+                        errors.lastName ? "last-name-error" : undefined
+                      }
                       type="text"
                       autoComplete="family-name"
                     />
 
                     {errors.lastName && (
-                      <p className={errorClassName}>
+                      <p id="last-name-error" className={errorClassName}>
                         {errors.lastName.message}
                       </p>
                     )}
@@ -296,13 +309,19 @@ function Checkout() {
                       {...register("address")}
                       className={inputClassName}
                       id="address"
+                      aria-invalid={errors.address ? "true" : "false"}
+                      aria-describedby={
+                        errors.address ? "address-error" : undefined
+                      }
                       type="text"
                       autoComplete="street-address"
                       placeholder="Street and house number"
                     />
 
                     {errors.address && (
-                      <p className={errorClassName}>{errors.address.message}</p>
+                      <p id="address-error" className={errorClassName}>
+                        {errors.address.message}
+                      </p>
                     )}
                   </div>
 
@@ -315,12 +334,16 @@ function Checkout() {
                       {...register("city")}
                       className={inputClassName}
                       id="city"
+                      aria-invalid={errors.city ? "true" : "false"}
+                      aria-describedby={errors.city ? "city-error" : undefined}
                       type="text"
                       autoComplete="address-level2"
                     />
 
                     {errors.city && (
-                      <p className={errorClassName}>{errors.city.message}</p>
+                      <p id="city-error" className={errorClassName}>
+                        {errors.city.message}
+                      </p>
                     )}
                   </div>
 
@@ -333,12 +356,16 @@ function Checkout() {
                       {...register("postalCode")}
                       className={inputClassName}
                       id="postalCode"
+                      aria-invalid={errors.postalCode ? "true" : "false"}
+                      aria-describedby={
+                        errors.postalCode ? "postal-code-error" : undefined
+                      }
                       type="text"
                       autoComplete="postal-code"
                     />
 
                     {errors.postalCode && (
-                      <p className={errorClassName}>
+                      <p id="postal-code-error" className={errorClassName}>
                         {errors.postalCode.message}
                       </p>
                     )}
@@ -353,6 +380,10 @@ function Checkout() {
                       {...register("country")}
                       className={`${inputClassName} cursor-pointer`}
                       id="country"
+                      aria-invalid={errors.country ? "true" : "false"}
+                      aria-describedby={
+                        errors.country ? "country-error" : undefined
+                      }
                       autoComplete="country-name"
                     >
                       <option value="">Select country</option>
@@ -365,7 +396,9 @@ function Checkout() {
                     </select>
 
                     {errors.country && (
-                      <p className={errorClassName}>{errors.country.message}</p>
+                      <p id="country-error" className={errorClassName}>
+                        {errors.country.message}
+                      </p>
                     )}
                   </div>
 
@@ -378,13 +411,19 @@ function Checkout() {
                       {...register("phone")}
                       className={inputClassName}
                       id="phone"
+                      aria-invalid={errors.phone ? "true" : "false"}
+                      aria-describedby={
+                        errors.phone ? "phone-error" : undefined
+                      }
                       type="tel"
                       autoComplete="tel"
                       placeholder="+380"
                     />
 
                     {errors.phone && (
-                      <p className={errorClassName}>{errors.phone.message}</p>
+                      <p id="phone-error" className={errorClassName}>
+                        {errors.phone.message}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -392,19 +431,19 @@ function Checkout() {
 
               <div className="my-8 border-t border-border sm:my-10" />
 
-              <section>
-                <div className="mb-5 sm:mb-6">
-                  <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.16em] text-text-secondary">
+              <fieldset>
+                <legend className="mb-5 sm:mb-6">
+                  <span className="mb-2 block text-[10px] font-medium uppercase tracking-[0.16em] text-text-secondary">
                     03
-                  </p>
+                  </span>
 
-                  <h2 className="font-display text-[26px] font-medium sm:text-[28px]">
+                  <span className="block font-display text-[26px] font-medium sm:text-[28px]">
                     Delivery
-                  </h2>
-                </div>
+                  </span>
+                </legend>
 
                 <div className="grid gap-3">
-                  <label className="flex cursor-pointer items-center justify-between gap-4 border border-border p-4 transition-colors has-[:checked]:border-text-primary sm:gap-5 sm:p-5">
+                  <label className="flex cursor-pointer items-center justify-between gap-4 border border-border p-4 transition-colors has-[:checked]:border-text-primary focus-within:outline focus-within:outline-1 focus-within:outline-offset-2 focus-within:outline-text-primary sm:gap-5 sm:p-5">
                     <span className="flex items-center gap-3 sm:gap-4">
                       <input
                         {...register("shippingMethod")}
@@ -429,7 +468,7 @@ function Checkout() {
                     </span>
                   </label>
 
-                  <label className="flex cursor-pointer items-center justify-between gap-4 border border-border p-4 transition-colors has-[:checked]:border-text-primary sm:gap-5 sm:p-5">
+                  <label className="flex cursor-pointer items-center justify-between gap-4 border border-border p-4 transition-colors has-[:checked]:border-text-primary focus-within:outline focus-within:outline-1 focus-within:outline-offset-2 focus-within:outline-text-primary sm:gap-5 sm:p-5">
                     <span className="flex items-center gap-3 sm:gap-4">
                       <input
                         {...register("shippingMethod")}
@@ -454,13 +493,13 @@ function Checkout() {
                     </span>
                   </label>
                 </div>
-              </section>
+              </fieldset>
             </div>
 
             <aside className="mx-auto w-full max-w-[620px] border border-border bg-surface p-5 sm:p-6 md:p-8 min-[1100px]:sticky min-[1100px]:top-28 min-[1100px]:mx-0 min-[1100px]:max-w-none">
-              <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:mb-6">
+              <h2 className="mb-5 text-[10px] font-medium uppercase tracking-[0.16em] text-text-secondary sm:mb-6">
                 Order summary
-              </p>
+              </h2>
 
               <div className="max-h-[280px] space-y-4 overflow-y-auto pr-1 sm:space-y-5">
                 {cartItems.map(({ product, quantity }) => (
@@ -530,7 +569,7 @@ function Checkout() {
               </div>
 
               <button
-                className="mx-auto mt-6 flex min-h-11 w-full cursor-pointer items-center justify-center bg-text-primary px-5 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 min-[480px]:max-w-[360px] sm:mt-7 sm:min-h-12 sm:px-6 sm:text-[11px] min-[1100px]:max-w-none"
+                className="mx-auto mt-6 flex min-h-11 w-full cursor-pointer items-center justify-center bg-text-primary px-5 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary disabled:cursor-not-allowed disabled:opacity-50 min-[480px]:max-w-[360px] sm:mt-7 sm:min-h-12 sm:px-6 sm:text-[11px] min-[1100px]:max-w-none"
                 type="submit"
                 disabled={isSubmitting}
               >

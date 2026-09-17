@@ -19,7 +19,7 @@ function Footer() {
         <div className="grid gap-8 py-5 md:grid-cols-[minmax(0,1fr)_390px] md:items-start md:gap-12 lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-16">
           <div>
             <Link
-              className="font-display text-[30px] font-medium tracking-[0.08em]"
+              className="font-display text-[30px] font-medium tracking-[0.08em] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary"
               to="/"
             >
               IVORIA
@@ -42,7 +42,7 @@ function Footer() {
                     </p>
 
                     <a
-                      className="text-[13px] transition-opacity hover:opacity-55 sm:text-[14px]"
+                      className="text-[13px] transition-opacity hover:opacity-55 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary sm:text-[14px]"
                       href="mailto:hello@ivoria.com"
                     >
                       hello@ivoria.com
@@ -55,7 +55,7 @@ function Footer() {
                     </p>
 
                     <a
-                      className="text-[13px] transition-opacity hover:opacity-55 sm:text-[14px]"
+                      className="text-[13px] transition-opacity hover:opacity-55 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary sm:text-[14px]"
                       href="tel:+380670000000"
                     >
                       +380 67 000 00 00
@@ -82,14 +82,14 @@ function Footer() {
 
                   <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] sm:text-[14px]">
                     <Link
-                      className="transition-opacity hover:opacity-55"
+                      className="transition-opacity hover:opacity-55 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary"
                       to="/#about"
                     >
                       About us
                     </Link>
 
                     <Link
-                      className="transition-opacity hover:opacity-55"
+                      className="transition-opacity hover:opacity-55 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary"
                       to="/#faq"
                     >
                       FAQ
@@ -134,16 +134,22 @@ function Footer() {
                 </div>
               ) : (
                 <form className="mt-4 flex w-full" onSubmit={handleSubscribe}>
+                  <label className="sr-only" htmlFor="newsletter-email">
+                    Email address
+                  </label>
+
                   <input
-                    className="h-11 min-w-0 flex-1 border border-border bg-[#faf4f0] px-3 text-[12px] outline-none transition-colors placeholder:text-text-secondary/60 focus:border-text-primary"
+                    className="h-11 min-w-0 flex-1 border border-border bg-[#faf4f0] px-3 text-[12px] outline-none transition-colors placeholder:text-text-secondary/60 focus:border-text-primary focus-visible:ring-1 focus-visible:ring-text-primary"
+                    id="newsletter-email"
+                    name="email"
                     type="email"
+                    autoComplete="email"
                     placeholder="Your email address"
-                    aria-label="Email address"
                     required
                   />
 
                   <button
-                    className="h-11 shrink-0 cursor-pointer bg-text-primary px-4 text-[9px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 sm:px-5 sm:text-[10px]"
+                    className="h-11 shrink-0 cursor-pointer bg-text-primary px-4 text-[9px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary sm:px-5 sm:text-[10px]"
                     type="submit"
                   >
                     Subscribe

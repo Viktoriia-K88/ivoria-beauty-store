@@ -125,17 +125,23 @@ function ProductDetails({ product }: { product: Product }) {
 
   return (
     <>
-      <div className="mb-6 flex flex-wrap items-center gap-1.5 text-[10px] uppercase tracking-[0.1em] text-text-secondary sm:mb-8 sm:gap-2 sm:text-[11px] md:mb-10">
-        <Link className="transition-opacity hover:opacity-60" to="/shop">
+      <nav
+        className="mb-6 flex flex-wrap items-center gap-1.5 text-[10px] uppercase tracking-[0.1em] text-text-secondary sm:mb-8 sm:gap-2 sm:text-[11px] md:mb-10"
+        aria-label="Breadcrumb"
+      >
+        <Link
+          className="transition-opacity hover:opacity-60 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary"
+          to="/shop"
+        >
           Shop
         </Link>
 
         {categoryLabel && (
           <>
-            <ChevronRight size={12} strokeWidth={1.2} />
+            <ChevronRight size={12} strokeWidth={1.2} aria-hidden="true" />
 
             <Link
-              className="transition-opacity hover:opacity-60"
+              className="transition-opacity hover:opacity-60 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary"
               to={categoryPath}
             >
               {categoryLabel}
@@ -143,12 +149,15 @@ function ProductDetails({ product }: { product: Product }) {
           </>
         )}
 
-        <ChevronRight size={12} strokeWidth={1.2} />
+        <ChevronRight size={12} strokeWidth={1.2} aria-hidden="true" />
 
-        <span className="max-w-[150px] truncate text-text-primary sm:max-w-[260px]">
+        <span
+          className="max-w-[150px] truncate text-text-primary sm:max-w-[260px]"
+          aria-current="page"
+        >
           {product.title}
         </span>
-      </div>
+      </nav>
 
       <div className="grid gap-8 md:gap-10 min-[1200px]:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.75fr)] min-[1200px]:gap-14 xl:gap-20">
         <div
@@ -160,19 +169,20 @@ function ProductDetails({ product }: { product: Product }) {
         >
           {hasMultipleImages && (
             <div className="order-2 flex gap-2.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-3 md:order-1 md:flex-col md:overflow-visible">
-              {galleryImages.slice(0, 6).map((image) => {
+              {galleryImages.slice(0, 6).map((image, index) => {
                 const isActive = image === activeImage;
 
                 return (
                   <button
-                    className={`aspect-square w-[64px] shrink-0 cursor-pointer overflow-hidden bg-surface transition-colors sm:w-[72px] md:w-full ${
+                    className={`aspect-square w-[64px] shrink-0 cursor-pointer overflow-hidden bg-surface transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary sm:w-[72px] md:w-full ${
                       isActive
                         ? "border border-text-primary"
                         : "border border-transparent hover:border-border"
                     }`}
                     type="button"
                     key={image}
-                    aria-label="View product image"
+                    aria-label={`View product image ${index + 1}`}
+                    aria-pressed={isActive}
                     onClick={() => setActiveImage(image)}
                   >
                     <img
@@ -234,6 +244,7 @@ function ProductDetails({ product }: { product: Product }) {
                     ? "bg-text-primary"
                     : "bg-text-secondary"
                 }`}
+                aria-hidden="true"
               />
 
               {availability}
@@ -268,9 +279,9 @@ function ProductDetails({ product }: { product: Product }) {
 
           {product.description ? (
             <div>
-              <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.15em] text-text-secondary">
+              <h2 className="mb-3 text-[10px] font-medium uppercase tracking-[0.15em] text-text-secondary">
                 Product details
-              </p>
+              </h2>
 
               <p className="max-w-[560px] text-[13px] leading-6 text-text-primary/75 sm:text-[14px] sm:leading-7">
                 {product.description}
@@ -312,13 +323,13 @@ function ProductDetails({ product }: { product: Product }) {
             <div className="grid grid-cols-[1fr_auto] gap-3 min-[480px]:grid-cols-[auto_minmax(220px,320px)_auto] min-[480px]:justify-start min-[1200px]:grid-cols-[auto_minmax(0,1fr)_auto] min-[1200px]:justify-stretch">
               <div className="col-start-1 row-start-1 flex h-12 w-fit shrink-0 items-center border border-border bg-background">
                 <button
-                  className="flex h-full w-10 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 disabled:cursor-not-allowed disabled:opacity-25 sm:w-11"
+                  className="flex h-full w-10 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-[-2px] focus-visible:outline-text-primary disabled:cursor-not-allowed disabled:opacity-25 sm:w-11"
                   type="button"
                   aria-label="Decrease quantity"
                   disabled={quantity === 1 || isOutOfStock}
                   onClick={decreaseQuantity}
                 >
-                  <Minus size={15} strokeWidth={1.2} />
+                  <Minus size={15} strokeWidth={1.2} aria-hidden="true" />
                 </button>
 
                 <span
@@ -329,29 +340,29 @@ function ProductDetails({ product }: { product: Product }) {
                 </span>
 
                 <button
-                  className="flex h-full w-10 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 disabled:cursor-not-allowed disabled:opacity-25 sm:w-11"
+                  className="flex h-full w-10 cursor-pointer items-center justify-center transition-opacity hover:opacity-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-[-2px] focus-visible:outline-text-primary disabled:cursor-not-allowed disabled:opacity-25 sm:w-11"
                   type="button"
                   aria-label="Increase quantity"
                   disabled={isOutOfStock}
                   onClick={increaseQuantity}
                 >
-                  <Plus size={15} strokeWidth={1.2} />
+                  <Plus size={15} strokeWidth={1.2} aria-hidden="true" />
                 </button>
               </div>
 
               <button
-                className="col-span-2 row-start-2 flex h-12 w-full cursor-pointer items-center justify-center gap-2.5 bg-text-primary px-5 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40 min-[480px]:col-span-1 min-[480px]:col-start-2 min-[480px]:row-start-1 sm:text-[11px]"
+                className="col-span-2 row-start-2 flex h-12 w-full cursor-pointer items-center justify-center gap-2.5 bg-text-primary px-5 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary disabled:cursor-not-allowed disabled:opacity-40 min-[480px]:col-span-1 min-[480px]:col-start-2 min-[480px]:row-start-1 sm:text-[11px]"
                 type="button"
                 disabled={isOutOfStock}
                 onClick={handleAddToCart}
               >
-                <ShoppingBag size={17} strokeWidth={1.15} />
+                <ShoppingBag size={17} strokeWidth={1.15} aria-hidden="true" />
 
                 {isOutOfStock ? "Out of stock" : "Add to bag"}
               </button>
 
               <button
-                className="col-start-2 row-start-1 flex size-12 shrink-0 cursor-pointer items-center justify-center border border-border text-text-primary transition-colors hover:border-text-primary min-[480px]:col-start-3"
+                className="col-start-2 row-start-1 flex size-12 shrink-0 cursor-pointer items-center justify-center border border-border text-text-primary transition-colors hover:border-text-primary focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary min-[480px]:col-start-3"
                 type="button"
                 aria-label={
                   isFavorite
@@ -365,6 +376,7 @@ function ProductDetails({ product }: { product: Product }) {
                   size={19}
                   strokeWidth={1.15}
                   fill={isFavorite ? "currentColor" : "none"}
+                  aria-hidden="true"
                 />
               </button>
             </div>
@@ -454,31 +466,37 @@ function ProductPage() {
   }, [productId, category, initialProduct]);
 
   return (
-    <section className="py-6 sm:py-8 md:py-10 xl:py-12">
+    <main className="py-6 sm:py-8 md:py-10 xl:py-12">
       <Container>
         {isLoading && (
           <>
-            <div className="mb-8 h-3 w-[180px] animate-pulse bg-border sm:mb-10 sm:w-[260px]" />
+            <p className="sr-only" role="status">
+              Loading product...
+            </p>
 
-            <div className="grid gap-8 md:gap-10 min-[1200px]:grid-cols-[1.25fr_0.75fr] min-[1200px]:gap-14 xl:gap-20">
-              <div className="mx-auto aspect-square w-full max-w-[760px] animate-pulse bg-sage min-[1200px]:mx-0 min-[1200px]:max-w-none" />
+            <div aria-hidden="true">
+              <div className="mb-8 h-3 w-[180px] animate-pulse bg-border sm:mb-10 sm:w-[260px]" />
 
-              <div className="mx-auto w-full max-w-[680px] pt-2 sm:pt-4 min-[1200px]:mx-0 min-[1200px]:max-w-none">
-                <div className="h-3 w-24 animate-pulse bg-border" />
+              <div className="grid gap-8 md:gap-10 min-[1200px]:grid-cols-[1.25fr_0.75fr] min-[1200px]:gap-14 xl:gap-20">
+                <div className="mx-auto aspect-square w-full max-w-[760px] animate-pulse bg-sage min-[1200px]:mx-0 min-[1200px]:max-w-none" />
 
-                <div className="mt-5 h-10 w-4/5 animate-pulse bg-border sm:mt-6 sm:h-12" />
+                <div className="mx-auto w-full max-w-[680px] pt-2 sm:pt-4 min-[1200px]:mx-0 min-[1200px]:max-w-none">
+                  <div className="h-3 w-24 animate-pulse bg-border" />
 
-                <div className="mt-3 h-10 w-3/5 animate-pulse bg-border sm:h-12" />
+                  <div className="mt-5 h-10 w-4/5 animate-pulse bg-border sm:mt-6 sm:h-12" />
 
-                <div className="mt-6 h-5 w-24 animate-pulse bg-border sm:mt-8" />
+                  <div className="mt-3 h-10 w-3/5 animate-pulse bg-border sm:h-12" />
 
-                <div className="mt-8 h-px bg-border sm:mt-10" />
+                  <div className="mt-6 h-5 w-24 animate-pulse bg-border sm:mt-8" />
 
-                <div className="mt-6 h-4 w-full animate-pulse bg-border sm:mt-8" />
+                  <div className="mt-8 h-px bg-border sm:mt-10" />
 
-                <div className="mt-3 h-4 w-5/6 animate-pulse bg-border" />
+                  <div className="mt-6 h-4 w-full animate-pulse bg-border sm:mt-8" />
 
-                <div className="mt-3 h-4 w-2/3 animate-pulse bg-border" />
+                  <div className="mt-3 h-4 w-5/6 animate-pulse bg-border" />
+
+                  <div className="mt-3 h-4 w-2/3 animate-pulse bg-border" />
+                </div>
               </div>
             </div>
           </>
@@ -489,7 +507,10 @@ function ProductPage() {
         )}
 
         {!isLoading && !product && error && (
-          <div className="flex min-h-[360px] flex-col items-center justify-center py-12 text-center sm:min-h-[420px] md:min-h-[480px]">
+          <div
+            className="flex min-h-[360px] flex-col items-center justify-center py-12 text-center sm:min-h-[420px] md:min-h-[480px]"
+            role="alert"
+          >
             <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-text-secondary">
               Product
             </p>
@@ -499,16 +520,16 @@ function ProductPage() {
             </h1>
 
             <Link
-              className="mt-7 inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.12em] transition-opacity hover:opacity-60 sm:mt-8 sm:text-[11px]"
+              className="mt-7 inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.12em] transition-opacity hover:opacity-60 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary sm:mt-8 sm:text-[11px]"
               to="/shop"
             >
-              <ArrowLeft size={16} strokeWidth={1.2} />
+              <ArrowLeft size={16} strokeWidth={1.2} aria-hidden="true" />
               Back to shop
             </Link>
           </div>
         )}
       </Container>
-    </section>
+    </main>
   );
 }
 

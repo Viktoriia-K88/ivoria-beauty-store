@@ -38,7 +38,7 @@ function ProductCard({ product }: ProductCardProps) {
     <article className="group">
       <div className="relative aspect-square overflow-hidden bg-surface">
         <Link
-          className="block h-full w-full"
+          className="block h-full w-full focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-[-2px] focus-visible:outline-text-primary"
           to={productPath}
           state={{ product }}
           aria-label={`View ${product.title}`}
@@ -58,7 +58,7 @@ function ProductCard({ product }: ProductCardProps) {
         )}
 
         <button
-          className="absolute right-2 top-2 flex size-8 cursor-pointer items-center justify-center rounded-full bg-background/90 text-text-primary transition-[transform,background-color] duration-300 hover:scale-105 hover:bg-background sm:right-3 sm:top-3 sm:size-9"
+          className="absolute right-2 top-2 flex size-8 cursor-pointer items-center justify-center rounded-full bg-background/90 text-text-primary transition-[transform,background-color] duration-300 hover:scale-105 hover:bg-background focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary sm:right-3 sm:top-3 sm:size-9"
           type="button"
           aria-label={
             isFavorite
@@ -72,6 +72,7 @@ function ProductCard({ product }: ProductCardProps) {
             className="size-4 sm:size-[18px]"
             strokeWidth={1.2}
             fill={isFavorite ? "currentColor" : "none"}
+            aria-hidden="true"
           />
         </button>
       </div>
@@ -81,7 +82,11 @@ function ProductCard({ product }: ProductCardProps) {
           {product.brand}
         </p>
 
-        <Link className="block" to={productPath} state={{ product }}>
+        <Link
+          className="block focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary"
+          to={productPath}
+          state={{ product }}
+        >
           <h3 className="line-clamp-2 min-h-10 text-[13px] leading-5 sm:text-[14px]">
             {product.title}
           </h3>

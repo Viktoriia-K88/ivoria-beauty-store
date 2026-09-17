@@ -127,6 +127,7 @@ function AboutSection() {
                       isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
                     }`}
                     id={answerId}
+                    aria-hidden={!isOpen}
                   >
                     <div className="overflow-hidden">
                       <p className="border-t border-text-primary/10 px-4 py-4 text-[13px] leading-5 text-text-secondary sm:px-5 sm:text-[14px] sm:leading-6">
