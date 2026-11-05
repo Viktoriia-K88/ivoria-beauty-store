@@ -7,6 +7,9 @@ import { Link, useNavigate } from "react-router";
 import { z } from "zod";
 
 import Container from "../../components/Container/Container";
+import { Button } from "../../components/ui/button";
+import { Field, FieldError, FieldLabel } from "../../components/ui/field";
+import { Input } from "../../components/ui/input";
 import { auth } from "../../config/firebase";
 
 const registerSchema = z
@@ -92,9 +95,6 @@ function Register() {
     }
   }
 
-  const inputClassName =
-    "h-12 w-full border border-border bg-surface px-4 text-[13px] outline-none transition-colors placeholder:text-text-secondary/55 focus:border-text-primary focus-visible:ring-1 focus-visible:ring-text-primary";
-
   const labelClassName =
     "mb-2 block text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary";
 
@@ -122,114 +122,115 @@ function Register() {
               noValidate
             >
               <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label className={labelClassName} htmlFor="firstName">
+                <Field data-invalid={!!errors.firstName} className="gap-0">
+                  <FieldLabel className={labelClassName} htmlFor="firstName">
                     First name
-                  </label>
+                  </FieldLabel>
 
-                  <input
+                  <Input
                     {...register("firstName")}
-                    className={inputClassName}
                     id="firstName"
                     type="text"
                     autoComplete="given-name"
-                    aria-invalid={errors.firstName ? "true" : "false"}
+                    aria-invalid={!!errors.firstName}
                     aria-describedby={
                       errors.firstName ? "first-name-error" : undefined
                     }
                   />
 
                   {errors.firstName && (
-                    <p id="first-name-error" className={errorClassName}>
+                    <FieldError
+                      id="first-name-error"
+                      className={errorClassName}
+                    >
                       {errors.firstName.message}
-                    </p>
+                    </FieldError>
                   )}
-                </div>
+                </Field>
 
-                <div>
-                  <label className={labelClassName} htmlFor="lastName">
+                <Field data-invalid={!!errors.lastName} className="gap-0">
+                  <FieldLabel className={labelClassName} htmlFor="lastName">
                     Last name
-                  </label>
+                  </FieldLabel>
 
-                  <input
+                  <Input
                     {...register("lastName")}
-                    className={inputClassName}
                     id="lastName"
                     type="text"
                     autoComplete="family-name"
-                    aria-invalid={errors.lastName ? "true" : "false"}
+                    aria-invalid={!!errors.lastName}
                     aria-describedby={
                       errors.lastName ? "last-name-error" : undefined
                     }
                   />
 
                   {errors.lastName && (
-                    <p id="last-name-error" className={errorClassName}>
+                    <FieldError id="last-name-error" className={errorClassName}>
                       {errors.lastName.message}
-                    </p>
+                    </FieldError>
                   )}
-                </div>
+                </Field>
               </div>
 
-              <div>
-                <label className={labelClassName} htmlFor="email">
+              <Field data-invalid={!!errors.email} className="gap-0">
+                <FieldLabel className={labelClassName} htmlFor="email">
                   Email address
-                </label>
+                </FieldLabel>
 
-                <input
+                <Input
                   {...register("email")}
-                  className={inputClassName}
                   id="email"
                   type="email"
                   autoComplete="email"
                   placeholder="you@example.com"
-                  aria-invalid={errors.email ? "true" : "false"}
+                  aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? "email-error" : undefined}
                 />
 
                 {errors.email && (
-                  <p id="email-error" className={errorClassName}>
+                  <FieldError id="email-error" className={errorClassName}>
                     {errors.email.message}
-                  </p>
+                  </FieldError>
                 )}
-              </div>
+              </Field>
 
-              <div>
-                <label className={labelClassName} htmlFor="password">
+              <Field data-invalid={!!errors.password} className="gap-0">
+                <FieldLabel className={labelClassName} htmlFor="password">
                   Password
-                </label>
+                </FieldLabel>
 
-                <input
+                <Input
                   {...register("password")}
-                  className={inputClassName}
                   id="password"
                   type="password"
                   autoComplete="new-password"
-                  aria-invalid={errors.password ? "true" : "false"}
+                  aria-invalid={!!errors.password}
                   aria-describedby={
                     errors.password ? "password-error" : undefined
                   }
                 />
 
                 {errors.password && (
-                  <p id="password-error" className={errorClassName}>
+                  <FieldError id="password-error" className={errorClassName}>
                     {errors.password.message}
-                  </p>
+                  </FieldError>
                 )}
-              </div>
+              </Field>
 
-              <div>
-                <label className={labelClassName} htmlFor="confirmPassword">
+              <Field data-invalid={!!errors.confirmPassword} className="gap-0">
+                <FieldLabel
+                  className={labelClassName}
+                  htmlFor="confirmPassword"
+                >
                   Confirm password
-                </label>
+                </FieldLabel>
 
-                <input
+                <Input
                   {...register("confirmPassword")}
-                  className={inputClassName}
                   id="confirmPassword"
                   type="password"
                   autoComplete="new-password"
-                  aria-invalid={errors.confirmPassword ? "true" : "false"}
+                  aria-invalid={!!errors.confirmPassword}
                   aria-describedby={
                     errors.confirmPassword
                       ? "confirm-password-error"
@@ -238,11 +239,14 @@ function Register() {
                 />
 
                 {errors.confirmPassword && (
-                  <p id="confirm-password-error" className={errorClassName}>
+                  <FieldError
+                    id="confirm-password-error"
+                    className={errorClassName}
+                  >
                     {errors.confirmPassword.message}
-                  </p>
+                  </FieldError>
                 )}
-              </div>
+              </Field>
 
               {authError && (
                 <p
@@ -253,13 +257,14 @@ function Register() {
                 </p>
               )}
 
-              <button
-                className="flex h-12 w-full cursor-pointer items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary disabled:cursor-not-allowed disabled:opacity-50 sm:text-[11px]"
+              <Button
+                className="w-full text-[10px] sm:text-[11px]"
+                size="lg"
                 type="submit"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Creating account..." : "Create account"}
-              </button>
+              </Button>
             </form>
 
             <p className="mt-6 text-center text-[12px] text-text-secondary">

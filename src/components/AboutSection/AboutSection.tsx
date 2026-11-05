@@ -1,7 +1,10 @@
-import { useState } from "react";
-import { Minus, Plus } from "lucide-react";
-
 import Container from "../Container/Container";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
 
 const questions = [
   {
@@ -37,16 +40,6 @@ const questions = [
 ];
 
 function AboutSection() {
-  const [openItems, setOpenItems] = useState<number[]>([]);
-
-  function toggleItem(index: number) {
-    setOpenItems((currentItems) =>
-      currentItems.includes(index)
-        ? currentItems.filter((item) => item !== index)
-        : [...currentItems, index],
-    );
-  }
-
   return (
     <section
       id="about"
@@ -92,53 +85,36 @@ function AboutSection() {
             </h3>
           </div>
 
-          <div className="grid items-start gap-3 min-[560px]:grid-cols-2 lg:grid-cols-3 xl:gap-4">
+          <Accordion
+            multiple
+            className="grid items-start gap-3 min-[560px]:grid-cols-2 lg:grid-cols-3 xl:gap-4"
+          >
             {questions.map((item, index) => {
-              const isOpen = openItems.includes(index);
-              const answerId = `about-answer-${index}`;
               const number = String(index + 1).padStart(2, "0");
 
               return (
-                <div className="bg-surface" key={item.question}>
-                  <button
-                    className="flex min-h-[72px] w-full cursor-pointer items-center gap-3 px-4 py-3 text-left sm:min-h-[76px] sm:px-5"
-                    type="button"
-                    aria-expanded={isOpen}
-                    aria-controls={answerId}
-                    onClick={() => toggleItem(index)}
-                  >
+                <AccordionItem
+                  key={item.question}
+                  value={`item-${index}`}
+                  className="border-none bg-surface"
+                >
+                  <AccordionTrigger className="min-h-[72px] items-center gap-3 rounded-none border-none px-4 py-3 text-left hover:no-underline sm:min-h-[76px] sm:px-5">
                     <span className="w-5 shrink-0 text-[9px] font-medium tracking-[0.12em] text-text-secondary">
                       {number}
                     </span>
 
-                    <h4 className="flex-1 text-[15px] leading-5 font-medium md:text-[16px]">
+                    <span className="flex-1 text-[15px] leading-5 font-medium md:text-[16px]">
                       {item.question}
-                    </h4>
+                    </span>
+                  </AccordionTrigger>
 
-                    {isOpen ? (
-                      <Minus className="shrink-0" size={16} strokeWidth={1.2} />
-                    ) : (
-                      <Plus className="shrink-0" size={16} strokeWidth={1.2} />
-                    )}
-                  </button>
-
-                  <div
-                    className={`grid transition-[grid-template-rows] duration-300 ease-out ${
-                      isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                    }`}
-                    id={answerId}
-                    aria-hidden={!isOpen}
-                  >
-                    <div className="overflow-hidden">
-                      <p className="border-t border-text-primary/10 px-4 py-4 text-[13px] leading-5 text-text-secondary sm:px-5 sm:text-[14px] sm:leading-6">
-                        {item.answer}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                  <AccordionContent className="border-t border-text-primary/10 px-4 py-4 text-[13px] leading-5 text-text-secondary sm:px-5 sm:text-[14px] sm:leading-6">
+                    {item.answer}
+                  </AccordionContent>
+                </AccordionItem>
               );
             })}
-          </div>
+          </Accordion>
         </div>
       </Container>
     </section>

@@ -14,18 +14,30 @@ import { useAuth } from "../../context/useAuth";
 import { useAppSelector } from "../../store/hooks";
 
 import Container from "../Container/Container";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "../ui/input-group";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "../ui/navigation-menu";
+import { Sheet, SheetContent, SheetTitle } from "../ui/sheet";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type MenuLink = {
   label: string;
   path: string;
 };
 
-type MenuAlign = "left" | "center" | "right";
-
 type NavigationItem = {
   label: string;
   path: string;
-  menuAlign?: MenuAlign;
 
   menu?: {
     types: MenuLink[];
@@ -42,7 +54,6 @@ const navigation: NavigationItem[] = [
   {
     label: "Skincare",
     path: "/shop?category=skincare",
-    menuAlign: "left",
 
     menu: {
       types: [
@@ -96,7 +107,6 @@ const navigation: NavigationItem[] = [
   {
     label: "Makeup",
     path: "/shop?category=makeup",
-    menuAlign: "center",
 
     menu: {
       types: [
@@ -166,7 +176,6 @@ const navigation: NavigationItem[] = [
   {
     label: "Perfume",
     path: "/shop?category=perfume",
-    menuAlign: "center",
 
     menu: {
       types: [
@@ -212,7 +221,6 @@ const navigation: NavigationItem[] = [
   {
     label: "Hair Care",
     path: "/shop?category=hair-care",
-    menuAlign: "right",
 
     menu: {
       types: [
@@ -266,7 +274,6 @@ const navigation: NavigationItem[] = [
   {
     label: "Body Care",
     path: "/shop?category=body-care",
-    menuAlign: "right",
 
     menu: {
       types: [
@@ -318,12 +325,6 @@ const navigation: NavigationItem[] = [
   },
 ];
 
-const menuPositionClasses = {
-  left: "left-0",
-  center: "left-1/2 -translate-x-1/2",
-  right: "right-0",
-};
-
 function Header() {
   const navigate = useNavigate();
 
@@ -337,6 +338,9 @@ function Header() {
     state.cart.items.reduce((total, item) => total + item.quantity, 0),
   );
 
+  const [isDesktopMenuOpen, setIsDesktopMenuOpen] = useState<string | null>(
+    null,
+  );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -351,6 +355,7 @@ function Header() {
   }
 
   function openSearch() {
+    setIsDesktopMenuOpen(null);
     setIsMenuOpen(false);
     setIsSearchOpen(true);
   }
@@ -375,31 +380,31 @@ function Header() {
   }
 
   useEffect(() => {
-    const isOverlayOpen = isMenuOpen || isSearchOpen;
-
-    if (!isOverlayOpen) {
-      return;
-    }
+    if (!isSearchOpen) return;
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setIsMenuOpen(false);
-        setIsSearchOpen(false);
-      }
+      if (event.key === "Escape") closeSearch();
     }
 
     const previousOverflow = document.body.style.overflow;
-
     document.body.style.overflow = "hidden";
-
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.style.overflow = previousOverflow;
-
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isMenuOpen, isSearchOpen]);
+  }, [isSearchOpen]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 900px)");
+    const closeMenuOnDesktop = () => {
+      if (mediaQuery.matches) setIsMenuOpen(false);
+    };
+
+    mediaQuery.addEventListener("change", closeMenuOnDesktop);
+    return () => mediaQuery.removeEventListener("change", closeMenuOnDesktop);
+  }, []);
 
   useEffect(() => {
     if (!isSearchOpen) {
@@ -421,7 +426,6 @@ function Header() {
               type="button"
               aria-label="Open menu"
               aria-expanded={isMenuOpen}
-              aria-controls="mobile-menu"
               onClick={() => setIsMenuOpen(true)}
             >
               <Menu size={22} strokeWidth={1.15} />
@@ -434,150 +438,194 @@ function Header() {
               IVORIA
             </Link>
 
-            <nav
-              className="hidden min-[900px]:block"
-              aria-label="Main navigation"
-            >
-              <ul className="flex items-center gap-4 xl:gap-5 2xl:gap-7">
-                {navigation.map((item) => {
-                  const align = item.menuAlign || "center";
-
-                  return (
-                    <li className="group relative" key={item.label}>
-                      <NavLink
-                        className="relative whitespace-nowrap text-[11px] font-normal uppercase tracking-[0.08em] after:absolute after:-bottom-1.5 after:left-0 after:h-[0.5px] after:w-0 after:bg-text-primary after:transition-[width] after:duration-300 hover:after:w-full focus-visible:after:w-full xl:text-[12px] xl:tracking-[0.1em] 2xl:text-[13px] 2xl:tracking-[0.12em]"
-                        to={item.path}
-                      >
-                        {item.label}
-                      </NavLink>
-
-                      {item.menu && (
-                        <div
-                          className={`invisible absolute top-full z-50 w-[540px] pt-6 opacity-0 transition-[opacity,visibility] duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 ${
-                            menuPositionClasses[align]
-                          }`}
-                        >
-                          <div className="border border-border bg-background shadow-[0_16px_40px_rgba(31,30,28,0.06)]">
+            <div className="hidden min-[900px]:block">
+              <NavigationMenu
+                aria-label="Main navigation"
+                className="max-w-none"
+                align="center"
+                value={isDesktopMenuOpen}
+                onValueChange={(value) =>
+                  setIsDesktopMenuOpen(value == null ? null : String(value))
+                }
+                delay={75}
+                closeDelay={120}
+              >
+                <NavigationMenuList className="gap-4 xl:gap-5 2xl:gap-7">
+                  {navigation.map((item) => (
+                    <NavigationMenuItem
+                      key={item.label}
+                      value={item.label}
+                      className="relative"
+                    >
+                      {item.menu ? (
+                        <>
+                          <NavigationMenuTrigger className="relative h-auto w-auto cursor-pointer rounded-none bg-transparent p-0 text-[11px] font-normal uppercase tracking-[0.08em] text-text-primary shadow-none outline-none after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-text-primary after:transition-[width] after:duration-300 hover:bg-transparent hover:after:w-full focus:bg-transparent focus-visible:after:w-full focus-visible:ring-0 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary data-open:bg-transparent data-popup-open:bg-transparent data-open:after:w-full xl:text-[12px] xl:tracking-[0.1em] 2xl:text-[13px] 2xl:tracking-[0.12em]">
+                            {item.label}
+                          </NavigationMenuTrigger>
+                          <NavigationMenuContent className="!h-auto !w-[540px] !p-0">
                             <div className="grid grid-cols-[1.35fr_1fr] gap-8 p-6">
                               <div>
                                 <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.16em] text-text-secondary">
                                   Shop by type
                                 </p>
-
                                 <ul className="grid grid-cols-2 gap-x-5 gap-y-3">
                                   {item.menu.types.map((link) => (
                                     <li key={link.label}>
-                                      <Link
-                                        className="text-[13px] leading-5 transition-opacity hover:opacity-55"
-                                        to={link.path}
+                                      <NavigationMenuLink
+                                        render={<Link to={link.path} />}
+                                        closeOnClick
+                                        onClick={() =>
+                                          setIsDesktopMenuOpen(null)
+                                        }
+                                        className="block rounded-none p-0 text-[13px] font-normal leading-5 text-text-primary transition-opacity hover:bg-transparent hover:opacity-55 focus:bg-transparent focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary"
                                       >
                                         {link.label}
-                                      </Link>
+                                      </NavigationMenuLink>
                                     </li>
                                   ))}
                                 </ul>
                               </div>
-
                               <div>
                                 <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.16em] text-text-secondary">
                                   Featured brands
                                 </p>
-
                                 <ul className="flex flex-col gap-3">
                                   {item.menu.brands.map((link) => (
                                     <li key={link.label}>
-                                      <Link
-                                        className="text-[13px] leading-5 transition-opacity hover:opacity-55"
-                                        to={link.path}
+                                      <NavigationMenuLink
+                                        render={<Link to={link.path} />}
+                                        closeOnClick
+                                        onClick={() =>
+                                          setIsDesktopMenuOpen(null)
+                                        }
+                                        className="block rounded-none p-0 text-[13px] font-normal leading-5 text-text-primary transition-opacity hover:bg-transparent hover:opacity-55 focus:bg-transparent focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary"
                                       >
                                         {link.label}
-                                      </Link>
+                                      </NavigationMenuLink>
                                     </li>
                                   ))}
                                 </ul>
                               </div>
                             </div>
-
-                            <Link
-                              className="group/link flex items-center justify-between border-t border-border px-6 py-4 text-[10px] font-medium uppercase tracking-[0.14em]"
-                              to={item.path}
+                            <NavigationMenuLink
+                              render={<Link to={item.path} />}
+                              closeOnClick
+                              onClick={() => setIsDesktopMenuOpen(null)}
+                              className="group/link flex items-center justify-between rounded-none border-t border-border px-6 py-4 text-[10px] font-medium uppercase tracking-[0.14em] text-text-primary hover:bg-transparent focus:bg-transparent focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-[-2px] focus-visible:outline-text-primary"
                             >
                               <span>Shop all {item.label}</span>
-
                               <ArrowRight
                                 className="transition-transform duration-300 group-hover/link:translate-x-1"
                                 size={16}
                                 strokeWidth={1.2}
+                                aria-hidden="true"
                               />
-                            </Link>
-                          </div>
-                        </div>
+                            </NavigationMenuLink>
+                          </NavigationMenuContent>
+                        </>
+                      ) : (
+                        <NavLink
+                          className="relative whitespace-nowrap text-[11px] font-normal uppercase tracking-[0.08em] after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-text-primary after:transition-[width] after:duration-300 hover:after:w-full focus-visible:after:w-full focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary xl:text-[12px] xl:tracking-[0.1em] 2xl:text-[13px] 2xl:tracking-[0.12em]"
+                          to={item.path}
+                          onMouseEnter={() => setIsDesktopMenuOpen(null)}
+                          onClick={() => setIsDesktopMenuOpen(null)}
+                        >
+                          {item.label}
+                        </NavLink>
                       )}
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
+                    </NavigationMenuItem>
+                  ))}
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
 
             <div className="flex items-center justify-self-end gap-3 xl:gap-4 2xl:gap-6">
-              <button
-                className="hidden cursor-pointer transition-opacity hover:opacity-60 min-[900px]:flex"
-                type="button"
-                aria-label="Search"
-                aria-expanded={isSearchOpen}
-                aria-controls="header-search-panel"
-                onClick={openSearch}
-              >
-                <Search
-                  className="size-5 xl:size-[22px] 2xl:size-[25px]"
-                  strokeWidth={1.15}
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <button
+                      className="hidden cursor-pointer transition-opacity hover:opacity-60 min-[900px]:flex"
+                      type="button"
+                      aria-label="Search"
+                      aria-expanded={isSearchOpen}
+                      aria-controls="header-search-panel"
+                      onClick={openSearch}
+                    >
+                      <Search
+                        className="size-5 xl:size-[22px] 2xl:size-[25px]"
+                        strokeWidth={1.15}
+                      />
+                    </button>
+                  }
                 />
-              </button>
+                <TooltipContent side="bottom">Search</TooltipContent>
+              </Tooltip>
 
-              <Link
-                className="hidden transition-opacity hover:opacity-60 min-[900px]:flex"
-                to={accountPath}
-                aria-label={accountLabel}
-              >
-                <UserRound
-                  className="size-5 xl:size-[22px] 2xl:size-[25px]"
-                  strokeWidth={1.15}
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <Link
+                      className="hidden transition-opacity hover:opacity-60 min-[900px]:flex"
+                      to={accountPath}
+                      aria-label={accountLabel}
+                    >
+                      <UserRound
+                        className="size-5 xl:size-[22px] 2xl:size-[25px]"
+                        strokeWidth={1.15}
+                      />
+                    </Link>
+                  }
                 />
-              </Link>
+                <TooltipContent side="bottom">{accountLabel}</TooltipContent>
+              </Tooltip>
 
-              <Link
-                className="relative hidden transition-opacity hover:opacity-60 min-[900px]:flex"
-                to="/favorites"
-                aria-label={`Favorites (${favoritesCount})`}
-              >
-                <Heart
-                  className="size-5 xl:size-[22px] 2xl:size-[25px]"
-                  strokeWidth={1.15}
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <Link
+                      className="relative hidden transition-opacity hover:opacity-60 min-[900px]:flex"
+                      to="/favorites"
+                      aria-label={`Favorites (${favoritesCount})`}
+                    >
+                      <Heart
+                        className="size-5 xl:size-[22px] 2xl:size-[25px]"
+                        strokeWidth={1.15}
+                      />
+
+                      {favoritesCount > 0 && (
+                        <span className="absolute -right-2 -top-2 flex min-w-4 items-center justify-center rounded-full bg-text-primary px-1 text-[9px] font-medium leading-4 text-white">
+                          {favoritesCount}
+                        </span>
+                      )}
+                    </Link>
+                  }
                 />
+                <TooltipContent side="bottom">Favorites</TooltipContent>
+              </Tooltip>
 
-                {favoritesCount > 0 && (
-                  <span className="absolute -right-2 -top-2 flex min-w-4 items-center justify-center rounded-full bg-text-primary px-1 text-[9px] font-medium leading-4 text-white">
-                    {favoritesCount}
-                  </span>
-                )}
-              </Link>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <Link
+                      className="relative flex transition-opacity hover:opacity-60"
+                      to="/cart"
+                      aria-label={`Cart (${cartCount})`}
+                    >
+                      <ShoppingBag
+                        className="size-[22px] min-[900px]:size-5 xl:size-[22px] 2xl:size-[25px]"
+                        strokeWidth={1.15}
+                      />
 
-              <Link
-                className="relative flex transition-opacity hover:opacity-60"
-                to="/cart"
-                aria-label={`Cart (${cartCount})`}
-              >
-                <ShoppingBag
-                  className="size-[22px] min-[900px]:size-5 xl:size-[22px] 2xl:size-[25px]"
-                  strokeWidth={1.15}
+                      {cartCount > 0 && (
+                        <span className="absolute -right-2 -top-2 flex min-w-4 items-center justify-center rounded-full bg-text-primary px-1 text-[9px] font-medium leading-4 text-white">
+                          {cartCount}
+                        </span>
+                      )}
+                    </Link>
+                  }
                 />
-
-                {cartCount > 0 && (
-                  <span className="absolute -right-2 -top-2 flex min-w-4 items-center justify-center rounded-full bg-text-primary px-1 text-[9px] font-medium leading-4 text-white">
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
+                <TooltipContent side="bottom">Shopping bag</TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </Container>
@@ -605,23 +653,27 @@ function Header() {
         <Container>
           <div className="flex h-16 items-center gap-8 min-[900px]:h-[68px]">
             <form
-              className="flex flex-1 items-center gap-3 border-b border-text-primary py-2"
+              className="flex flex-1 items-center border-b border-text-primary py-2"
               onSubmit={handleSearchSubmit}
             >
-              <Search className="shrink-0" size={18} strokeWidth={1.15} />
+              <InputGroup className="h-11 rounded-none border-0 bg-transparent shadow-none has-[[data-slot=input-group-control]:focus-visible]:border-0 has-[[data-slot=input-group-control]:focus-visible]:ring-0">
+                <InputGroupAddon className="pl-0">
+                  <Search size={18} strokeWidth={1.15} aria-hidden="true" />
+                </InputGroupAddon>
 
-              <input
-                ref={searchInputRef}
-                id="header-search"
-                name="search"
-                className="w-full bg-transparent font-display text-[18px] outline-none placeholder:text-text-secondary/60 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary md:text-[20px]"
-                type="text"
-                inputMode="search"
-                value={searchQuery}
-                placeholder="Search products or brands"
-                aria-label="Search products and brands"
-                onChange={(event) => setSearchQuery(event.target.value)}
-              />
+                <InputGroupInput
+                  ref={searchInputRef}
+                  id="header-search"
+                  name="search"
+                  className="h-full min-w-0 bg-transparent px-2 font-display text-[18px] placeholder:text-text-secondary/60 focus-visible:outline-none md:text-[20px]"
+                  type="text"
+                  inputMode="search"
+                  value={searchQuery}
+                  placeholder="Search products or brands"
+                  aria-label="Search products and brands"
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                />
+              </InputGroup>
             </form>
 
             <button
@@ -636,24 +688,13 @@ function Header() {
         </Container>
       </div>
 
-      <div
-        id="mobile-menu"
-        className={`fixed inset-0 z-50 bg-black/20 transition-opacity min-[900px]:hidden ${
-          isMenuOpen
-            ? "pointer-events-auto opacity-100 duration-[400ms]"
-            : "pointer-events-none opacity-0 duration-[250ms]"
-        }`}
-        onClick={closeMenu}
-        inert={!isMenuOpen}
-      >
-        <div
-          className={`h-full w-full bg-background transition-transform min-[360px]:w-[85%] min-[480px]:w-[60%] min-[700px]:w-[45%] ${
-            isMenuOpen
-              ? "translate-x-0 duration-[400ms] ease-out"
-              : "-translate-x-full duration-[250ms] ease-in"
-          }`}
-          onClick={(event) => event.stopPropagation()}
+      <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+        <SheetContent
+          side="left"
+          showCloseButton={false}
+          className="w-full max-w-none gap-0 border-r-0 bg-background p-0 sm:max-w-none min-[360px]:w-[85%] min-[480px]:w-[60%] min-[700px]:w-[45%] min-[900px]:hidden"
         >
+          <SheetTitle className="sr-only">Mobile navigation</SheetTitle>
           <div className="flex h-[72px] items-center justify-between border-b border-border px-5">
             <Link
               className="font-display text-[27px] font-medium tracking-[0.08em]"
@@ -673,7 +714,7 @@ function Header() {
             </button>
           </div>
 
-          <div className="px-5">
+          <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-8">
             <nav className="pt-5" aria-label="Mobile navigation">
               <ul className="flex flex-col">
                 {navigation.map((item) => (
@@ -694,7 +735,6 @@ function Header() {
               <button
                 className="flex cursor-pointer items-center gap-3 text-[12px] uppercase tracking-[0.08em] transition-opacity hover:opacity-60"
                 type="button"
-                aria-expanded={isSearchOpen}
                 aria-controls="header-search-panel"
                 onClick={openSearch}
               >
@@ -729,8 +769,8 @@ function Header() {
               </Link>
             </div>
           </div>
-        </div>
-      </div>
+        </SheetContent>
+      </Sheet>
     </>
   );
 }

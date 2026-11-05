@@ -1,5 +1,6 @@
 import { Heart } from "lucide-react";
 import { Link } from "react-router";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 import { toggleFavorite } from "../../features/favorites/favoritesSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
@@ -57,24 +58,34 @@ function ProductCard({ product }: ProductCardProps) {
           </span>
         )}
 
-        <button
-          className="absolute right-2 top-2 flex size-8 cursor-pointer items-center justify-center rounded-full bg-background/90 text-text-primary transition-[transform,background-color] duration-300 hover:scale-105 hover:bg-background focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary sm:right-3 sm:top-3 sm:size-9"
-          type="button"
-          aria-label={
-            isFavorite
-              ? `Remove ${product.title} from favorites`
-              : `Add ${product.title} to favorites`
-          }
-          aria-pressed={isFavorite}
-          onClick={handleFavoriteClick}
-        >
-          <Heart
-            className="size-4 sm:size-[18px]"
-            strokeWidth={1.2}
-            fill={isFavorite ? "currentColor" : "none"}
-            aria-hidden="true"
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <button
+                className="absolute right-2 top-2 flex size-8 cursor-pointer items-center justify-center rounded-full bg-background/90 text-text-primary transition-[transform,background-color] duration-300 hover:scale-105 hover:bg-background focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary sm:right-3 sm:top-3 sm:size-9"
+                type="button"
+                aria-label={
+                  isFavorite
+                    ? `Remove ${product.title} from favorites`
+                    : `Add ${product.title} to favorites`
+                }
+                aria-pressed={isFavorite}
+                onClick={handleFavoriteClick}
+              >
+                <Heart
+                  className="size-4 sm:size-[18px]"
+                  strokeWidth={1.2}
+                  fill={isFavorite ? "currentColor" : "none"}
+                  aria-hidden="true"
+                />
+              </button>
+            }
           />
-        </button>
+
+          <TooltipContent side="top">
+            {isFavorite ? "Remove from favorites" : "Add to favorites"}
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       <div className="pt-3 sm:pt-4">
