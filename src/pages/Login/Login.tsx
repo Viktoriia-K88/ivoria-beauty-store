@@ -10,6 +10,9 @@ import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import { z } from "zod";
 
 import Container from "../../components/Container/Container";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { Field, FieldError, FieldLabel } from "../../components/ui/field";
 import { auth } from "../../config/firebase";
 import { useAuth } from "../../context/useAuth";
 
@@ -145,9 +148,6 @@ function Login() {
     return <Navigate to={redirectPath} replace />;
   }
 
-  const inputClassName =
-    "h-12 w-full border border-border bg-surface px-4 text-[13px] outline-none transition-colors placeholder:text-text-secondary/55 focus:border-text-primary focus-visible:ring-1 focus-visible:ring-text-primary";
-
   const labelClassName =
     "mb-2 block text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary";
 
@@ -173,37 +173,36 @@ function Login() {
               onSubmit={handleSubmit(onSubmit)}
               noValidate
             >
-              <div>
-                <label className={labelClassName} htmlFor="email">
+              <Field data-invalid={!!errors.email} className="gap-0">
+                <FieldLabel className={labelClassName} htmlFor="email">
                   Email address
-                </label>
+                </FieldLabel>
 
-                <input
+                <Input
                   {...register("email")}
-                  className={inputClassName}
                   id="email"
                   type="email"
                   autoComplete="email"
                   placeholder="you@example.com"
-                  aria-invalid={errors.email ? "true" : "false"}
+                  aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? "email-error" : undefined}
                 />
 
                 {errors.email && (
-                  <p id="email-error" className={errorClassName}>
+                  <FieldError id="email-error" className={errorClassName}>
                     {errors.email.message}
-                  </p>
+                  </FieldError>
                 )}
-              </div>
+              </Field>
 
-              <div>
+              <Field data-invalid={!!errors.password} className="gap-0">
                 <div className="mb-2 flex items-center justify-between gap-4">
-                  <label
+                  <FieldLabel
                     className="text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary"
                     htmlFor="password"
                   >
                     Password
-                  </label>
+                  </FieldLabel>
 
                   <button
                     className="cursor-pointer text-[11px] text-text-secondary underline decoration-border underline-offset-4 transition-opacity hover:opacity-60 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary disabled:cursor-not-allowed disabled:opacity-50"
@@ -215,24 +214,23 @@ function Login() {
                   </button>
                 </div>
 
-                <input
+                <Input
                   {...register("password")}
-                  className={inputClassName}
                   id="password"
                   type="password"
                   autoComplete="current-password"
-                  aria-invalid={errors.password ? "true" : "false"}
+                  aria-invalid={!!errors.password}
                   aria-describedby={
                     errors.password ? "password-error" : undefined
                   }
                 />
 
                 {errors.password && (
-                  <p id="password-error" className={errorClassName}>
+                  <FieldError id="password-error" className={errorClassName}>
                     {errors.password.message}
-                  </p>
+                  </FieldError>
                 )}
-              </div>
+              </Field>
 
               {authError && (
                 <p
@@ -261,13 +259,14 @@ function Login() {
                 </p>
               )}
 
-              <button
-                className="flex h-12 w-full cursor-pointer items-center justify-center bg-text-primary px-6 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary disabled:cursor-not-allowed disabled:opacity-50 sm:text-[11px]"
+              <Button
+                className="w-full text-[10px] sm:text-[11px]"
+                size="lg"
                 type="submit"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Signing in..." : "Sign in"}
-              </button>
+              </Button>
             </form>
 
             <p className="mt-6 text-center text-[12px] text-text-secondary">

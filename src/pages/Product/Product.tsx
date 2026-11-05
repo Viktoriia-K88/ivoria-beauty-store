@@ -10,6 +10,7 @@ import {
 import { Link, useLocation, useParams, useSearchParams } from "react-router";
 
 import Container from "../../components/Container/Container";
+import { Button } from "../../components/ui/button";
 import { addToCart } from "../../features/cart/cartSlice";
 import { toggleFavorite } from "../../features/favorites/favoritesSlice";
 import { getProductById } from "../../services/productsApi";
@@ -350,8 +351,9 @@ function ProductDetails({ product }: { product: Product }) {
                 </button>
               </div>
 
-              <button
-                className="col-span-2 row-start-2 flex h-12 w-full cursor-pointer items-center justify-center gap-2.5 bg-text-primary px-5 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary disabled:cursor-not-allowed disabled:opacity-40 min-[480px]:col-span-1 min-[480px]:col-start-2 min-[480px]:row-start-1 sm:text-[11px]"
+              <Button
+                className="col-span-2 row-start-2 w-full gap-2.5 min-[480px]:col-span-1 min-[480px]:col-start-2 min-[480px]:row-start-1 sm:text-[11px] disabled:opacity-40"
+                size="lg"
                 type="button"
                 disabled={isOutOfStock}
                 onClick={handleAddToCart}
@@ -359,10 +361,12 @@ function ProductDetails({ product }: { product: Product }) {
                 <ShoppingBag size={17} strokeWidth={1.15} aria-hidden="true" />
 
                 {isOutOfStock ? "Out of stock" : "Add to bag"}
-              </button>
+              </Button>
 
-              <button
-                className="col-start-2 row-start-1 flex size-12 shrink-0 cursor-pointer items-center justify-center border border-border text-text-primary transition-colors hover:border-text-primary focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-text-primary min-[480px]:col-start-3"
+              <Button
+                className="col-start-2 row-start-1 size-12 shrink-0 border border-border hover:border-text-primary hover:bg-transparent min-[480px]:col-start-3"
+                variant="ghost"
+                size="icon"
                 type="button"
                 aria-label={
                   isFavorite
@@ -378,7 +382,7 @@ function ProductDetails({ product }: { product: Product }) {
                   fill={isFavorite ? "currentColor" : "none"}
                   aria-hidden="true"
                 />
-              </button>
+              </Button>
             </div>
 
             {cartQuantity > 0 && (
@@ -397,7 +401,7 @@ function ProductDetails({ product }: { product: Product }) {
   );
 }
 
-function ProductPage() {
+function ProductPageContent() {
   const { productId } = useParams();
 
   const location = useLocation();
@@ -531,6 +535,12 @@ function ProductPage() {
       </Container>
     </main>
   );
+}
+
+function ProductPage() {
+  const { productId } = useParams();
+
+  return <ProductPageContent key={productId} />;
 }
 
 export default ProductPage;

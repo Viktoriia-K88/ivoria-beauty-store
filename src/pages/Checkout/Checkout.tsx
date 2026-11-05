@@ -6,6 +6,13 @@ import { Link } from "react-router";
 import { z } from "zod";
 
 import Container from "../../components/Container/Container";
+import { Button } from "../../components/ui/button";
+import { Field, FieldError, FieldLabel } from "../../components/ui/field";
+import { Input } from "../../components/ui/input";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "../../components/ui/native-select";
 import { clearCart } from "../../features/cart/cartSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
@@ -167,8 +174,8 @@ function Checkout() {
     );
   }
 
-  const inputClassName =
-    "h-11 w-full border border-border bg-background px-3 text-[13px] outline-none transition-colors placeholder:text-text-secondary/60 focus:border-text-primary focus-visible:ring-1 focus-visible:ring-text-primary sm:h-12 sm:px-4";
+  const checkoutInputClassName =
+    "h-11 bg-background px-3 placeholder:text-text-secondary/60 sm:h-12 sm:px-4";
 
   const labelClassName =
     "mb-2 block text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary";
@@ -214,16 +221,16 @@ function Checkout() {
                   </h2>
                 </div>
 
-                <div>
-                  <label className={labelClassName} htmlFor="email">
+                <Field data-invalid={!!errors.email} className="gap-0">
+                  <FieldLabel className={labelClassName} htmlFor="email">
                     Email address
-                  </label>
+                  </FieldLabel>
 
-                  <input
+                  <Input
                     {...register("email")}
-                    className={inputClassName}
+                    className={checkoutInputClassName}
                     id="email"
-                    aria-invalid={errors.email ? "true" : "false"}
+                    aria-invalid={!!errors.email}
                     aria-describedby={errors.email ? "email-error" : undefined}
                     type="email"
                     autoComplete="email"
@@ -231,11 +238,11 @@ function Checkout() {
                   />
 
                   {errors.email && (
-                    <p id="email-error" className={errorClassName}>
+                    <FieldError id="email-error" className={errorClassName}>
                       {errors.email.message}
-                    </p>
+                    </FieldError>
                   )}
-                </div>
+                </Field>
               </section>
 
               <div className="my-8 border-t border-border sm:my-10" />
@@ -252,16 +259,16 @@ function Checkout() {
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2 sm:gap-5">
-                  <div>
-                    <label className={labelClassName} htmlFor="firstName">
+                  <Field data-invalid={!!errors.firstName} className="gap-0">
+                    <FieldLabel className={labelClassName} htmlFor="firstName">
                       First name
-                    </label>
+                    </FieldLabel>
 
-                    <input
+                    <Input
                       {...register("firstName")}
-                      className={inputClassName}
+                      className={checkoutInputClassName}
                       id="firstName"
-                      aria-invalid={errors.firstName ? "true" : "false"}
+                      aria-invalid={!!errors.firstName}
                       aria-describedby={
                         errors.firstName ? "first-name-error" : undefined
                       }
@@ -270,22 +277,25 @@ function Checkout() {
                     />
 
                     {errors.firstName && (
-                      <p id="first-name-error" className={errorClassName}>
+                      <FieldError
+                        id="first-name-error"
+                        className={errorClassName}
+                      >
                         {errors.firstName.message}
-                      </p>
+                      </FieldError>
                     )}
-                  </div>
+                  </Field>
 
-                  <div>
-                    <label className={labelClassName} htmlFor="lastName">
+                  <Field data-invalid={!!errors.lastName} className="gap-0">
+                    <FieldLabel className={labelClassName} htmlFor="lastName">
                       Last name
-                    </label>
+                    </FieldLabel>
 
-                    <input
+                    <Input
                       {...register("lastName")}
-                      className={inputClassName}
+                      className={checkoutInputClassName}
                       id="lastName"
-                      aria-invalid={errors.lastName ? "true" : "false"}
+                      aria-invalid={!!errors.lastName}
                       aria-describedby={
                         errors.lastName ? "last-name-error" : undefined
                       }
@@ -294,22 +304,28 @@ function Checkout() {
                     />
 
                     {errors.lastName && (
-                      <p id="last-name-error" className={errorClassName}>
+                      <FieldError
+                        id="last-name-error"
+                        className={errorClassName}
+                      >
                         {errors.lastName.message}
-                      </p>
+                      </FieldError>
                     )}
-                  </div>
+                  </Field>
 
-                  <div className="sm:col-span-2">
-                    <label className={labelClassName} htmlFor="address">
+                  <Field
+                    data-invalid={!!errors.address}
+                    className="gap-0 sm:col-span-2"
+                  >
+                    <FieldLabel className={labelClassName} htmlFor="address">
                       Address
-                    </label>
+                    </FieldLabel>
 
-                    <input
+                    <Input
                       {...register("address")}
-                      className={inputClassName}
+                      className={checkoutInputClassName}
                       id="address"
-                      aria-invalid={errors.address ? "true" : "false"}
+                      aria-invalid={!!errors.address}
                       aria-describedby={
                         errors.address ? "address-error" : undefined
                       }
@@ -319,44 +335,44 @@ function Checkout() {
                     />
 
                     {errors.address && (
-                      <p id="address-error" className={errorClassName}>
+                      <FieldError id="address-error" className={errorClassName}>
                         {errors.address.message}
-                      </p>
+                      </FieldError>
                     )}
-                  </div>
+                  </Field>
 
-                  <div>
-                    <label className={labelClassName} htmlFor="city">
+                  <Field data-invalid={!!errors.city} className="gap-0">
+                    <FieldLabel className={labelClassName} htmlFor="city">
                       City
-                    </label>
+                    </FieldLabel>
 
-                    <input
+                    <Input
                       {...register("city")}
-                      className={inputClassName}
+                      className={checkoutInputClassName}
                       id="city"
-                      aria-invalid={errors.city ? "true" : "false"}
+                      aria-invalid={!!errors.city}
                       aria-describedby={errors.city ? "city-error" : undefined}
                       type="text"
                       autoComplete="address-level2"
                     />
 
                     {errors.city && (
-                      <p id="city-error" className={errorClassName}>
+                      <FieldError id="city-error" className={errorClassName}>
                         {errors.city.message}
-                      </p>
+                      </FieldError>
                     )}
-                  </div>
+                  </Field>
 
-                  <div>
-                    <label className={labelClassName} htmlFor="postalCode">
+                  <Field data-invalid={!!errors.postalCode} className="gap-0">
+                    <FieldLabel className={labelClassName} htmlFor="postalCode">
                       Postal code
-                    </label>
+                    </FieldLabel>
 
-                    <input
+                    <Input
                       {...register("postalCode")}
-                      className={inputClassName}
+                      className={checkoutInputClassName}
                       id="postalCode"
-                      aria-invalid={errors.postalCode ? "true" : "false"}
+                      aria-invalid={!!errors.postalCode}
                       aria-describedby={
                         errors.postalCode ? "postal-code-error" : undefined
                       }
@@ -365,53 +381,70 @@ function Checkout() {
                     />
 
                     {errors.postalCode && (
-                      <p id="postal-code-error" className={errorClassName}>
+                      <FieldError
+                        id="postal-code-error"
+                        className={errorClassName}
+                      >
                         {errors.postalCode.message}
-                      </p>
+                      </FieldError>
                     )}
-                  </div>
+                  </Field>
 
-                  <div>
-                    <label className={labelClassName} htmlFor="country">
+                  <Field data-invalid={!!errors.country} className="gap-0">
+                    <FieldLabel className={labelClassName} htmlFor="country">
                       Country
-                    </label>
+                    </FieldLabel>
 
-                    <select
+                    <NativeSelect
                       {...register("country")}
-                      className={`${inputClassName} cursor-pointer`}
+                      className="w-full"
                       id="country"
-                      aria-invalid={errors.country ? "true" : "false"}
+                      aria-invalid={!!errors.country}
                       aria-describedby={
                         errors.country ? "country-error" : undefined
                       }
                       autoComplete="country-name"
                     >
-                      <option value="">Select country</option>
-                      <option value="Ukraine">Ukraine</option>
-                      <option value="Poland">Poland</option>
-                      <option value="Germany">Germany</option>
-                      <option value="France">France</option>
-                      <option value="Italy">Italy</option>
-                      <option value="Spain">Spain</option>
-                    </select>
+                      <NativeSelectOption value="">
+                        Select country
+                      </NativeSelectOption>
+                      <NativeSelectOption value="Ukraine">
+                        Ukraine
+                      </NativeSelectOption>
+                      <NativeSelectOption value="Poland">
+                        Poland
+                      </NativeSelectOption>
+                      <NativeSelectOption value="Germany">
+                        Germany
+                      </NativeSelectOption>
+                      <NativeSelectOption value="France">
+                        France
+                      </NativeSelectOption>
+                      <NativeSelectOption value="Italy">
+                        Italy
+                      </NativeSelectOption>
+                      <NativeSelectOption value="Spain">
+                        Spain
+                      </NativeSelectOption>
+                    </NativeSelect>
 
                     {errors.country && (
-                      <p id="country-error" className={errorClassName}>
+                      <FieldError id="country-error" className={errorClassName}>
                         {errors.country.message}
-                      </p>
+                      </FieldError>
                     )}
-                  </div>
+                  </Field>
 
-                  <div>
-                    <label className={labelClassName} htmlFor="phone">
+                  <Field data-invalid={!!errors.phone} className="gap-0">
+                    <FieldLabel className={labelClassName} htmlFor="phone">
                       Phone
-                    </label>
+                    </FieldLabel>
 
-                    <input
+                    <Input
                       {...register("phone")}
-                      className={inputClassName}
+                      className={checkoutInputClassName}
                       id="phone"
-                      aria-invalid={errors.phone ? "true" : "false"}
+                      aria-invalid={!!errors.phone}
                       aria-describedby={
                         errors.phone ? "phone-error" : undefined
                       }
@@ -421,11 +454,11 @@ function Checkout() {
                     />
 
                     {errors.phone && (
-                      <p id="phone-error" className={errorClassName}>
+                      <FieldError id="phone-error" className={errorClassName}>
                         {errors.phone.message}
-                      </p>
+                      </FieldError>
                     )}
-                  </div>
+                  </Field>
                 </div>
               </section>
 
@@ -568,13 +601,14 @@ function Checkout() {
                 </span>
               </div>
 
-              <button
-                className="mx-auto mt-6 flex min-h-11 w-full cursor-pointer items-center justify-center bg-text-primary px-5 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary disabled:cursor-not-allowed disabled:opacity-50 min-[480px]:max-w-[360px] sm:mt-7 sm:min-h-12 sm:px-6 sm:text-[11px] min-[1100px]:max-w-none"
+              <Button
+                className="mx-auto mt-6 w-full min-[480px]:max-w-[360px] sm:mt-7 sm:min-h-12 sm:px-6 sm:text-[11px] min-[1100px]:max-w-none"
+                size="default"
                 type="submit"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Processing..." : "Place order"}
-              </button>
+              </Button>
 
               <p className="mt-4 text-center text-[10px] leading-4 text-text-secondary">
                 This is a portfolio demo. No real payment will be processed.

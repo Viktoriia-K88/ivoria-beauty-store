@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import {
   Link,
   useNavigate,
@@ -8,6 +8,19 @@ import {
 } from "react-router";
 
 import Container from "../../components/Container/Container";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "../../components/ui/native-select";
+import { Skeleton } from "../../components/ui/skeleton";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "../../components/ui/input-group";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { getProductsPage } from "../../services/productsApi";
 import type { Product } from "../../types/product";
@@ -568,36 +581,39 @@ function ShopCatalog({
 
         <div className="border-b border-border py-4 sm:py-5">
           <div className="flex flex-col gap-4 sm:gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="relative w-full lg:max-w-[450px]">
-              <Search
-                className="absolute left-0 top-1/2 -translate-y-1/2"
-                size={18}
-                strokeWidth={1.2}
-                aria-hidden="true"
-              />
+            <div className="w-full lg:max-w-[450px]">
+              <InputGroup className="h-11 rounded-none border-0 bg-transparent shadow-none has-[[data-slot=input-group-control]:focus-visible]:border-transparent has-[[data-slot=input-group-control]:focus-visible]:ring-0 focus-within:border-b focus-within:border-text-primary">
+                <InputGroupAddon className="pl-0">
+                  <Search size={18} strokeWidth={1.2} aria-hidden="true" />
+                </InputGroupAddon>
 
-              <input
-                id="shop-search"
-                name="search"
-                className="w-full border-b border-transparent bg-transparent py-2 pl-7 pr-8 text-[13px] outline-none transition-colors duration-200 placeholder:text-text-secondary focus:border-text-primary"
-                type="text"
-                inputMode="search"
-                value={search}
-                placeholder="Search products or brands"
-                aria-label="Search products or brands"
-                onChange={(event) => setSearch(event.target.value)}
-              />
+                <InputGroupInput
+                  id="shop-search"
+                  name="search"
+                  className="h-full min-w-0 px-2 text-[13px]"
+                  type="text"
+                  inputMode="search"
+                  value={search}
+                  placeholder="Search products or brands"
+                  aria-label="Search products or brands"
+                  onChange={(event) => setSearch(event.target.value)}
+                />
 
-              {search && (
-                <button
-                  className="absolute right-0 top-1/2 flex -translate-y-1/2 cursor-pointer transition-opacity hover:opacity-60"
-                  type="button"
-                  aria-label="Clear search"
-                  onClick={clearSearch}
-                >
-                  <X size={16} strokeWidth={1.2} aria-hidden="true" />
-                </button>
-              )}
+                {search && (
+                  <InputGroupAddon align="inline-end" className="pr-0">
+                    <InputGroupButton
+                      className="size-8 rounded-none p-0 hover:bg-transparent"
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      aria-label="Clear search"
+                      onClick={clearSearch}
+                    >
+                      <X size={16} strokeWidth={1.2} aria-hidden="true" />
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                )}
+              </InputGroup>
             </div>
 
             <div className="flex items-center justify-between gap-4 sm:gap-6 lg:justify-end">
@@ -621,30 +637,23 @@ function ShopCatalog({
                 )}
               </button>
 
-              <div className="relative">
+              <div>
                 <label className="sr-only" htmlFor="shop-sort">
                   Sort products
                 </label>
 
-                <select
+                <NativeSelect
                   id="shop-sort"
-                  className="cursor-pointer appearance-none bg-transparent py-2 pr-6 text-[10px] font-medium uppercase tracking-[0.1em] outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-text-primary sm:text-[11px]"
+                  size="sm"
                   value={sort}
                   onChange={(event) => handleSortChange(event.target.value)}
                 >
                   {sortOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
+                    <NativeSelectOption key={option.value} value={option.value}>
                       {option.label}
-                    </option>
+                    </NativeSelectOption>
                   ))}
-                </select>
-
-                <ChevronDown
-                  className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2"
-                  size={14}
-                  strokeWidth={1.2}
-                  aria-hidden="true"
-                />
+                </NativeSelect>
               </div>
             </div>
           </div>
@@ -659,10 +668,10 @@ function ShopCatalog({
                   Min price
                 </span>
 
-                <input
+                <Input
                   id="min-price"
                   name="minPrice"
-                  className="w-full border border-border bg-transparent px-3 py-2.5 text-[13px] outline-none transition-colors focus:border-text-primary min-[420px]:w-[150px]"
+                  className="h-11 bg-transparent px-3 text-[13px] min-[420px]:w-[150px]"
                   type="number"
                   min="0"
                   placeholder="$0"
@@ -676,10 +685,10 @@ function ShopCatalog({
                   Max price
                 </span>
 
-                <input
+                <Input
                   id="max-price"
                   name="maxPrice"
-                  className="w-full border border-border bg-transparent px-3 py-2.5 text-[13px] outline-none transition-colors focus:border-text-primary min-[420px]:w-[150px]"
+                  className="h-11 bg-transparent px-3 text-[13px] min-[420px]:w-[150px]"
                   type="number"
                   min="0"
                   placeholder="$300"
@@ -736,13 +745,10 @@ function ShopCatalog({
             >
               {Array.from({ length: 8 }).map((_, index) => (
                 <div key={index}>
-                  <div className="aspect-square animate-pulse bg-sage" />
-
-                  <div className="mt-3 h-3 w-1/3 animate-pulse bg-border sm:mt-4" />
-
-                  <div className="mt-3 h-4 w-4/5 animate-pulse bg-border" />
-
-                  <div className="mt-3 h-4 w-1/4 animate-pulse bg-border" />
+                  <Skeleton className="aspect-square rounded-none bg-sage" />
+                  <Skeleton className="mt-3 h-3 w-1/3 rounded-none bg-border sm:mt-4" />
+                  <Skeleton className="mt-3 h-4 w-4/5 rounded-none bg-border" />
+                  <Skeleton className="mt-3 h-4 w-1/4 rounded-none bg-border" />
                 </div>
               ))}
             </div>
@@ -779,14 +785,16 @@ function ShopCatalog({
 
             {canLoadMore && (
               <div className="mt-10 flex justify-center sm:mt-12 md:mt-14 xl:mt-16">
-                <button
-                  className="min-w-[160px] cursor-pointer border border-text-primary px-6 py-3 text-[10px] font-medium uppercase tracking-[0.12em] transition-colors duration-300 hover:bg-text-primary hover:text-white disabled:cursor-default disabled:opacity-50 sm:min-w-[170px] sm:px-7 sm:py-3.5 sm:text-[11px]"
+                <Button
+                  className="min-w-[160px] border-text-primary sm:min-w-[170px] sm:text-[11px]"
+                  variant="outline"
+                  size="lg"
                   type="button"
                   disabled={isLoadingMore}
                   onClick={handleLoadMore}
                 >
                   {isLoadingMore ? "Loading..." : "Load more"}
-                </button>
+                </Button>
               </div>
             )}
           </>

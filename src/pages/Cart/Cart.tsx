@@ -1,13 +1,21 @@
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "../../components/ui/tooltip";
+
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { Link } from "react-router";
 
 import Container from "../../components/Container/Container";
+import { Button } from "../../components/ui/button";
 import {
   clearCart,
   decreaseQuantity,
   increaseQuantity,
   removeFromCart,
 } from "../../features/cart/cartSlice";
+
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 function formatPrice(price: number, currency: string) {
@@ -93,13 +101,15 @@ function Cart() {
               </p>
             </div>
 
-            <button
-              className="cursor-pointer text-[10px] font-medium uppercase tracking-[0.12em] text-text-secondary underline decoration-border underline-offset-4 transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary"
+            <Button
+              className="min-h-0 p-0 text-text-secondary underline decoration-border underline-offset-4 hover:bg-transparent hover:text-text-primary"
+              variant="ghost"
+              size="sm"
               type="button"
               onClick={() => dispatch(clearCart())}
             >
               Clear cart
-            </button>
+            </Button>
           </div>
 
           <div className="grid gap-10 md:gap-12 min-[1100px]:grid-cols-[minmax(0,1fr)_340px] min-[1100px]:items-start min-[1100px]:gap-14 xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-20">
@@ -149,18 +159,31 @@ function Cart() {
                           </Link>
                         </div>
 
-                        <button
-                          className="flex shrink-0 cursor-pointer items-center justify-center text-text-secondary transition-colors hover:text-text-primary focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-3 focus-visible:outline-text-primary"
-                          type="button"
-                          aria-label={`Remove ${product.title} from cart`}
-                          onClick={() => dispatch(removeFromCart(product.id))}
-                        >
-                          <Trash2
-                            className="size-[17px] sm:size-5"
-                            strokeWidth={1.1}
-                            aria-hidden="true"
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={
+                              <Button
+                                className="size-auto shrink-0 p-0 text-text-secondary hover:bg-transparent hover:text-text-primary"
+                                variant="ghost"
+                                size="icon"
+                                type="button"
+                                aria-label={`Remove ${product.title} from cart`}
+                                onClick={() =>
+                                  dispatch(removeFromCart(product.id))
+                                }
+                              >
+                                <Trash2
+                                  className="size-[17px] sm:size-5"
+                                  strokeWidth={1.1}
+                                  aria-hidden="true"
+                                />
+                              </Button>
+                            }
                           />
-                        </button>
+                          <TooltipContent side="top">
+                            Remove item
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
 
                       <p className="mt-2 text-[12px] text-text-secondary sm:mt-3 sm:text-[13px]">
